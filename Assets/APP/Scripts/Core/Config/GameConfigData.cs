@@ -3,6 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = nameof(GameConfigData), menuName = "App/Data/Game Config Data")]
 public class GameConfigData : ScriptableObject
 {
+    [Header("Swipe Settings")]
+    public float SwipeMinDistance = 50f; // Jarak minimum untuk dihitung sebagai swipe (pixel)
+    public float TapMaxDuration = 0.2f;  // Batas waktu untuk tap biasa
+    public float LongPressMinDuration = 0.5f;
+
     [Header("Input & Game Feel")]
     public float scrollSensitivity = 10f;
     public float rotateSensitivity = 0.2f;

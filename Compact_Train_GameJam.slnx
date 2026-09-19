@@ -6,6 +6,7 @@
   <Project Path="AppModuleStatePattern.csproj" />
   <Project Path="AppModuleCommon.csproj" />
   <Project Path="MoreMountains.Interface.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="MoreMountains.InventoryEngine.Editor.csproj" />
   <Project Path="AppModuleSoundSystem.Editor.csproj" />
