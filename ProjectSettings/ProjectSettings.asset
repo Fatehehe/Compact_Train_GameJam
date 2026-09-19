@@ -838,7 +838,8 @@ PlayerSettings:
   webWasm2023: 1
   webEnableSubmoduleStrippingCompatibility: 0
   webProgressiveAssetLoading: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    iPhone: MOREMOUNTAINS_INTERFACE;MOREMOUNTAINS_INVENTORYENGINE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
