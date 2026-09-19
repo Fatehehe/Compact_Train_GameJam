@@ -12,6 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b3b5546e13a403783b86976de03b10, type: 3}
   m_Name: GlobalGameConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameConfigData
+  SwipeMinDistance: 50
+  TapMaxDuration: 0.2
+  LongPressMinDuration: 0.5
+  characterMinimumSpeed: 0.1
+  characterMaximumSpeed: 7
+  characterLaneWidth: 1.5
+  characterLaneSwitchSpeed: 5
+  maxLaneIndex: 1
+  minVerticalBlend: 0.1
+  maxVerticalBlend: 1
+  swipeVerticalStep: 0.05
+  animatorDampTime: 0.1
+  crossFadeDuration: 0.1
   scrollSensitivity: 10
   rotateSensitivity: 0.2
   dragThreshold: 25

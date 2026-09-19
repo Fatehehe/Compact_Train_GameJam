@@ -3,7 +3,7 @@ using VContainer;
 using VContainer.Unity;
 using UnityEngine;
 
-public class PlayerInteractionService : IInitializable, IDisposable
+public class CharacterInteractionService : IInitializable, IDisposable
 {
     private readonly InputSystemService inputSystemService;
     private readonly GameConfigData config;
@@ -23,7 +23,7 @@ public class PlayerInteractionService : IInitializable, IDisposable
     private bool hasSwiped;
 
     [Inject]
-    public PlayerInteractionService(InputSystemService inputSystemService, GameConfigData config)
+    public CharacterInteractionService(InputSystemService inputSystemService, GameConfigData config)
     {
         this.inputSystemService = inputSystemService;
         this.config = config;
@@ -75,11 +75,13 @@ public class PlayerInteractionService : IInitializable, IDisposable
         float duration = Time.time - startTime;
         if (duration <= config.TapMaxDuration)
         {
-            OnTap?.Invoke(currentPos);
+            // OnTap?.Invoke(currentPos);
+            PlayerEvents.OnTapPerformed?.Invoke(currentPos);
         }
         else if (duration >= config.LongPressMinDuration)
         {
-            OnLongPress?.Invoke(currentPos);
+            // OnLongPress?.Invoke(currentPos);
+            PlayerEvents.OnLongPressPerformed?.Invoke(currentPos);
         }
     }
 
@@ -87,13 +89,13 @@ public class PlayerInteractionService : IInitializable, IDisposable
     {
         if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
         {
-            if (delta.x > 0) OnSwipeRight?.Invoke();
-            else OnSwipeLeft?.Invoke();
+            if (delta.x > 0) PlayerEvents.OnSwipeRightPerformed?.Invoke(); /*OnSwipeRight?.Invoke();*/
+            else /*OnSwipeLeft?.Invoke();*/ PlayerEvents.OnSwipeLeftPerformed?.Invoke();
         }
         else
         {
-            if (delta.y > 0) OnSwipeUp?.Invoke();
-            else OnSwipeDown?.Invoke();
+            if (delta.y > 0) /* OnSwipeUp?.Invoke(); */ PlayerEvents.OnSwipeUpPerformed?.Invoke();
+            else /* OnSwipeDown?.Invoke(); */ PlayerEvents.OnSwipeDownPerformed?.Invoke();
         }
     }
 }
