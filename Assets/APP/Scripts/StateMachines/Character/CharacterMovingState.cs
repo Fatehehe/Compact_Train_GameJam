@@ -7,15 +7,12 @@ public class CharacterMovingState : CharacterBaseState
     private readonly int VerticalHash = Animator.StringToHash("Vertical");
 
     private float targetVertical;
-    private int currentLane = 0;
 
     public CharacterMovingState(CharacterStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
         targetVertical = stateMachine.Config.minVerticalBlend;
-        Debug.Log($"targetVertical: {targetVertical}");
-        currentLane = 0;
 
         PlayerEvents.OnSwipeUpPerformed += HandleSwipeUp;
         PlayerEvents.OnSwipeDownPerformed += HandleSwipeDown;
@@ -27,9 +24,9 @@ public class CharacterMovingState : CharacterBaseState
 
     public override void Tick(float deltaTime)
     {
-        HandleHorizontalMovement(deltaTime);
+        HandleHorizontalMovement(deltaTime, stateMachine.CurrentLane, HorizontalHash);
         stateMachine.Animator.SetFloat(VerticalHash, targetVertical, stateMachine.Config.animatorDampTime, deltaTime);
-        MoveForward(deltaTime);
+        HandleVerticalMovement(deltaTime, stateMachine.Animator.GetFloat(VerticalHash));
     }
 
     public override void Exit()
@@ -60,38 +57,11 @@ public class CharacterMovingState : CharacterBaseState
 
     private void HandleSwipeRight()
     {
-        currentLane = Mathf.Clamp(currentLane + 1, -stateMachine.Config.maxLaneIndex, stateMachine.Config.maxLaneIndex);
+        stateMachine.CurrentLane = Mathf.Clamp(stateMachine.CurrentLane + 1, -stateMachine.Config.maxLaneIndex, stateMachine.Config.maxLaneIndex);
     }
 
     private void HandleSwipeLeft()
     {
-        currentLane = Mathf.Clamp(currentLane - 1, -stateMachine.Config.maxLaneIndex, stateMachine.Config.maxLaneIndex);
-    }
-
-    private void HandleHorizontalMovement(float deltaTime)
-    {
-        float targetPositionX = currentLane * stateMachine.Config.characterLaneWidth;
-
-        Vector3 currentPos = stateMachine.transform.position;
-
-        float newX = Mathf.Lerp(currentPos.x, targetPositionX, deltaTime * stateMachine.Config.characterLaneSwitchSpeed);
-        stateMachine.transform.position = new Vector3(newX, currentPos.y, currentPos.z);
-
-        float distanceToTarget = targetPositionX - stateMachine.transform.position.x;
-        float animHorizontal = Mathf.Clamp(distanceToTarget, -1f, 1f);
-
-        stateMachine.Animator.SetFloat(HorizontalHash, animHorizontal, stateMachine.Config.animatorDampTime, deltaTime);
-    }
-
-    private void MoveForward(float deltaTime)
-    {
-        float currentAnimVertical = stateMachine.Animator.GetFloat(VerticalHash);
-        float currentSpeed = Mathf.Lerp(
-            stateMachine.Config.characterMinimumSpeed,
-            stateMachine.Config.characterMaximumSpeed,
-            currentAnimVertical
-        );
-        Debug.Log($"currentAnimVertical: {currentAnimVertical}");
-        stateMachine.transform.Translate(Vector3.forward * currentSpeed * deltaTime);
+        stateMachine.CurrentLane = Mathf.Clamp(stateMachine.CurrentLane - 1, -stateMachine.Config.maxLaneIndex, stateMachine.Config.maxLaneIndex);
     }
 }

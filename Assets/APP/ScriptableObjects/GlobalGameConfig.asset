@@ -16,13 +16,13 @@ MonoBehaviour:
   TapMaxDuration: 0.2
   LongPressMinDuration: 0.5
   characterMinimumSpeed: 0.1
-  characterMaximumSpeed: 7
-  characterLaneWidth: 1.5
+  characterMaximumSpeed: 10
+  characterLaneWidth: 1.8
   characterLaneSwitchSpeed: 5
   maxLaneIndex: 1
-  minVerticalBlend: 0.1
+  minVerticalBlend: 0
   maxVerticalBlend: 1
-  swipeVerticalStep: 0.05
+  swipeVerticalStep: 0.1
   animatorDampTime: 0.1
   crossFadeDuration: 0.1
   scrollSensitivity: 10
