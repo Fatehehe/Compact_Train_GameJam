@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CharacterMovingState : CharacterBaseState
@@ -13,11 +14,9 @@ public class CharacterMovingState : CharacterBaseState
     public override void Enter()
     {
         targetVertical = stateMachine.Config.minVerticalBlend;
-
-        PlayerEvents.OnSwipeUpPerformed += HandleSwipeUp;
-        PlayerEvents.OnSwipeDownPerformed += HandleSwipeDown;
         PlayerEvents.OnSwipeRightPerformed += HandleSwipeRight;
         PlayerEvents.OnSwipeLeftPerformed += HandleSwipeLeft;
+        PlayerEvents.OnTapPerformed += HandleTap;
 
         stateMachine.Animator.CrossFadeInFixedTime(MovingBlendTreeHash, stateMachine.Config.crossFadeDuration);
     }
@@ -31,25 +30,16 @@ public class CharacterMovingState : CharacterBaseState
 
     public override void Exit()
     {
-        PlayerEvents.OnSwipeUpPerformed -= HandleSwipeUp;
-        PlayerEvents.OnSwipeDownPerformed -= HandleSwipeDown;
         PlayerEvents.OnSwipeRightPerformed -= HandleSwipeRight;
         PlayerEvents.OnSwipeLeftPerformed -= HandleSwipeLeft;
+        PlayerEvents.OnTapPerformed -= HandleTap;
     }
 
-    private void HandleSwipeUp()
+    private void HandleTap(Vector2 vector)
     {
         targetVertical = Mathf.Clamp(
-            targetVertical + stateMachine.Config.swipeVerticalStep,
-            stateMachine.Config.minVerticalBlend,
-            stateMachine.Config.maxVerticalBlend
-        );
-    }
-
-    private void HandleSwipeDown()
-    {
-        targetVertical = Mathf.Clamp(
-            targetVertical - stateMachine.Config.swipeVerticalStep,
+            targetVertical + stateMachine.Config.verticalStep
+            ,
             stateMachine.Config.minVerticalBlend,
             stateMachine.Config.maxVerticalBlend
         );
