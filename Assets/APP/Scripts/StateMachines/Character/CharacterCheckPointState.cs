@@ -15,7 +15,8 @@ public class CharacterCheckPointState : CharacterBaseState
 
     public override void Tick(float deltaTime)
     {
-        MoveForward(deltaTime, 4f);
+        HandleHorizontalMovement(deltaTime, stateMachine.CurrentLane, 0);
+        MoveForward(deltaTime, 2f);
     }
 
     public override void Exit()

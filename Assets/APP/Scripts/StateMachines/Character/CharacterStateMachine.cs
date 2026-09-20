@@ -7,6 +7,8 @@ public class CharacterStateMachine : StateMachine
     [field: SerializeField] public Animator Animator { get; private set; }
     [field: SerializeField] public ObstacleDetector ObstacleDetector { get; private set; }
     [field: SerializeField] public EnemyDetector EnemyDetector { get; private set; }
+    [field: SerializeField] public Target Target { get; private set; }
+
 
     public int CurrentLane { get; set; } = 0;
     public GameConfigData Config { get; private set; }
@@ -40,12 +42,7 @@ public class CharacterStateMachine : StateMachine
     {
         if (closestEnemy != null)
         {
-            // Debug.Log($"Musuh terdekat terdeteksi: {closestEnemy.name}. Siap menyerang!");
             SwitchState(new CharacterPushingState(this));
-        }
-        else
-        {
-            SwitchState(new CharacterCheckPointState(this));
         }
     }
 
@@ -56,6 +53,7 @@ public class CharacterStateMachine : StateMachine
 
     private void HandleCheckPoint()
     {
+        CurrentLane = 0;
         SwitchState(new CharacterCheckPointState(this));
     }
 }

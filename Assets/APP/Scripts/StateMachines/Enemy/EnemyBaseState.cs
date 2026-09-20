@@ -18,11 +18,17 @@ public abstract class EnemyBaseState : State
 
     protected void Move(Vector3 motion, float deltaTime)
     {
-        // stateMachine.Controller.Move((motion + stateMachine.ForceReceiver.Movement) * deltaTime);
+        stateMachine.transform.position += motion * deltaTime;
     }
 
-    protected void FacePlayer()
+    protected void FaceTarget()
     {
+        if (stateMachine.Targeter.CurrentTarget == null) { return; }
+
+        Vector3 lookPosition = stateMachine.Targeter.CurrentTarget.transform.position - stateMachine.transform.position;
+        lookPosition.y = 0f;
+
+        stateMachine.transform.rotation = Quaternion.LookRotation(lookPosition);
     }
 
     protected void FaceTarget(Transform target)
@@ -30,5 +36,18 @@ public abstract class EnemyBaseState : State
         Vector3 lookPosition = target.position - stateMachine.transform.position;
         lookPosition.y = 0f;
         stateMachine.transform.rotation = Quaternion.LookRotation(lookPosition);
+    }
+
+    protected void MoveToTarget(float deltaTime)
+    {
+        if (stateMachine.Targeter.CurrentTarget == null) { return; }
+        MoveToTarget(stateMachine.Targeter.CurrentTarget.transform, deltaTime);
+    }
+
+    protected void MoveToTarget(Transform target, float deltaTime)
+    {
+        Vector3 direction = (target.position - stateMachine.transform.position).normalized;
+        direction.y = 0f;
+        Move(direction * stateMachine.MoveSpeed, deltaTime);
     }
 }

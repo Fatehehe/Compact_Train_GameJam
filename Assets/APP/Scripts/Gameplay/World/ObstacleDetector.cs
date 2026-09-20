@@ -13,6 +13,7 @@ public class ObstacleDetector : MonoBehaviour
 
     public void CheckPoint()
     {
+        Debug.Log("Checkpoint reached! Switch to checkpoint state.");
         OnCheckPoint?.Invoke();
     }
 }
