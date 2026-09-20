@@ -8,12 +8,13 @@ public class CharacterImpactState : CharacterBaseState
 
     public CharacterImpactState(CharacterStateMachine stateMachine, float knockBack) : base(stateMachine)
     {
-        this.currentKnockbackSpeed = knockBack;
+        currentKnockbackSpeed = knockBack;
     }
 
     public override void Enter()
     {
-        Debug.Log("Enter Impact State");
+        Debug.Log("character state: CharacterImpactState");
+
         stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, stateMachine.Config.crossFadeDuration);
     }
 

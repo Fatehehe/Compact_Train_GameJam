@@ -46,7 +46,8 @@ public class EnemyStateMachine : StateMachine
 
     private void HandleTargetReached()
     {
-        SwitchState(new EnemyIdleState(this));
+        Debug.Log("Target Reached");
+        SwitchState(new EnemyAttackState(this));
     }
 
     private void Start()

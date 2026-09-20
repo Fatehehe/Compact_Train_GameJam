@@ -10,6 +10,8 @@ public class CharacterCheckPointState : CharacterBaseState
 
     public override void Enter()
     {
+        Debug.Log("character state: CharacterCheckPointState");
+
         stateMachine.Animator.CrossFadeInFixedTime(CheckPointHash, stateMachine.Config.crossFadeDuration);
     }
 

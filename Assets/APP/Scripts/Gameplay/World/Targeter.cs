@@ -111,9 +111,15 @@ public class Targeter : MonoBehaviour
         targets.Remove(target);
     }
 
-    public void PullTarget()
+    public void PullTarget(int pullDamage)
     {
         if (CurrentTarget == null) { return; }
-        CurrentTarget.Pull();
+        CurrentTarget.Pull(pullDamage);
+    }
+
+    public bool IsTargetEliminated()
+    {
+        if (CurrentTarget.pullHP == 0) return true;
+        return false;
     }
 }

@@ -13,6 +13,8 @@ public class CharacterMovingState : CharacterBaseState
 
     public override void Enter()
     {
+        Debug.Log("character state: CharacterMovingState");
+
         targetVertical = stateMachine.Config.minVerticalBlend;
         PlayerEvents.OnSwipeRightPerformed += HandleSwipeRight;
         PlayerEvents.OnSwipeLeftPerformed += HandleSwipeLeft;

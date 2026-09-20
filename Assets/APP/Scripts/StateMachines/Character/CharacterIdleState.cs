@@ -8,6 +8,8 @@ public class CharacterIdleState : CharacterBaseState
 
     public override void Enter()
     {
+        Debug.Log("character state: CharacterIdleState");
+
         PlayerEvents.OnTapPerformed += HandleTap;
     }
 

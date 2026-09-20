@@ -11,6 +11,8 @@ public class CharacterPushingState : CharacterBaseState
 
     public override void Enter()
     {
+        Debug.Log("character state: CharacterPushingState");
+
         stateMachine.Animator.CrossFadeInFixedTime(PushHash, stateMachine.Config.crossFadeDuration);
         PlayerEvents.OnSwipeRightPerformed += HandleSwipeRight;
         PlayerEvents.OnSwipeLeftPerformed += HandleSwipeLeft;
@@ -28,7 +30,7 @@ public class CharacterPushingState : CharacterBaseState
 
     public override void Tick(float deltaTime)
     {
-
+        // HandleHorizontalMovement(deltaTime, stateMachine.CurrentLane, 0);
     }
 
     private void HandleSwipeRight()
