@@ -16,13 +16,13 @@ MonoBehaviour:
   TapMaxDuration: 0.2
   LongPressMinDuration: 0.5
   characterMinimumSpeed: 0.1
-  characterMaximumSpeed: 10
+  characterMaximumSpeed: 20
   characterLaneWidth: 1.8
   characterLaneSwitchSpeed: 5
   maxLaneIndex: 1
-  minVerticalBlend: 0
+  minVerticalBlend: 0.1
   maxVerticalBlend: 1
-  swipeVerticalStep: 0.1
+  verticalStep: 0.25
   animatorDampTime: 0.1
   crossFadeDuration: 0.1
   scrollSensitivity: 10
@@ -31,20 +31,6 @@ MonoBehaviour:
   holdDelay: 0.2
   holdDuration: 0.5
   holdMoveTolerance: 5
-  socketSnapDistance: 2
-  emptySlotDistance: 7
-  recenterAnimDuration: 0.5
-  inspectionMinDistance: 2
-  inspectionZoomSpeed: 0.02
-  inspectionSmoothTime: 0.1
-  inspectionResetDuration: 1
-  inspectionPinchSensitivity: 0.05
-  toolTipOffset: 135
   autoSaveCooldown: 1
   minLoadingScreenDuration: 2
   bgmFadeDuration: 2
-  tutorialItemId: Artefact_Coin
-  tutorialSecondItemId: Artefact_Keris
-  steamURL: 
-  discordURL: https://discord.gg/YOUR_INVITE_CODE
-  instagramURL: https://www.instagram.com/YOUR_ACCOUNT_NAME

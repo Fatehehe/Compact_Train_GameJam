@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Sense : MonoBehaviour
+public class ObstacleDetector : MonoBehaviour
 {
     public event Action<float> OnTakeDamage;
     public event Action OnCheckPoint;

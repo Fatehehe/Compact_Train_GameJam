@@ -10,7 +10,6 @@ public abstract class CharacterBaseState : State
 
     protected void HandleVerticalMovement(float deltaTime, float currentAnimVertical)
     {
-        Debug.Log($"Current Anim Vertical: {currentAnimVertical}");
         if (currentAnimVertical == 0f) return;
 
         float currentSpeed = Mathf.Lerp(
@@ -19,6 +18,11 @@ public abstract class CharacterBaseState : State
             currentAnimVertical
         );
         stateMachine.transform.Translate(Vector3.forward * currentSpeed * deltaTime);
+    }
+
+    protected void MoveForward(float deltaTime, float speed)
+    {
+        stateMachine.transform.Translate(Vector3.forward * speed * deltaTime);
     }
 
     protected void HandleHorizontalMovement(float deltaTime, int currentLane, int HorizontalHash)

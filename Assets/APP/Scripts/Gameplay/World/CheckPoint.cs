@@ -3,15 +3,14 @@ using UnityEngine;
 public class CheckPoint : MonoBehaviour
 {
     [SerializeField] private Collider myCollider;
-    private readonly float knockback = 10f;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other == myCollider) { return; }
 
-        if (other.TryGetComponent(out Sense sense))
+        if (other.TryGetComponent(out ObstacleDetector ObstacleDetector))
         {
-            sense.CheckPoint();
+            ObstacleDetector.CheckPoint();
 
             ObstacleDisappear();
         }
@@ -19,6 +18,6 @@ public class CheckPoint : MonoBehaviour
 
     private void ObstacleDisappear()
     {
-        Destroy(gameObject);
+        myCollider.enabled = false;
     }
 }

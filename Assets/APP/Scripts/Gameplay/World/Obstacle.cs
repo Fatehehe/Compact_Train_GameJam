@@ -9,9 +9,9 @@ public class Obstacle : MonoBehaviour
     {
         if (other == myCollider) { return; }
 
-        if (other.TryGetComponent(out Sense sense))
+        if (other.TryGetComponent(out ObstacleDetector ObstacleDetector))
         {
-            sense.DealDamage(knockback);
+            ObstacleDetector.DealDamage(knockback);
 
             ObstacleDisappear();
         }
