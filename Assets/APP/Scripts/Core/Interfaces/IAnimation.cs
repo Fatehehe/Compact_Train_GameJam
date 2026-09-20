@@ -1,0 +1,9 @@
+using UnityEngine;
+
+public interface IAnimation
+{
+    void OnFallCompleted();
+    void OnFallBehindCompleted();
+    void OnGettingUpCompleted();
+    void OnStandingUpCompleted();
+}

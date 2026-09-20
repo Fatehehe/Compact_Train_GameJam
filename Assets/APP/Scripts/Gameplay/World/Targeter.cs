@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Targeter : MonoBehaviour
 {
-    [SerializeField] private float reachDistance = 1.5f;
+    [SerializeField] private float reachDistance = 0.5f;
     public event Action OnTargetReached;
     public event Action OnTargetDetected; // Event mendeteksi target
     private bool hasReachedTarget = false;

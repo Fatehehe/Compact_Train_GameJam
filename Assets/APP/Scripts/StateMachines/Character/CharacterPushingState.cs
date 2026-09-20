@@ -1,54 +1,23 @@
 using System;
 using UnityEngine;
 
-public class CharacterPushingState : CharacterBaseState
+public class CharacterPushingState : CharacterBaseState, ITap, ISwipe
 {
-    private readonly int PushHash = Animator.StringToHash("Walk");
+    private readonly int PushHash = Animator.StringToHash("Pushing");
 
-    public CharacterPushingState(CharacterStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public CharacterPushingState(CharacterStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        Debug.Log("character state: CharacterPushingState");
-
         stateMachine.Animator.CrossFadeInFixedTime(PushHash, stateMachine.Config.crossFadeDuration);
-        PlayerEvents.OnSwipeRightPerformed += HandleSwipeRight;
-        PlayerEvents.OnSwipeLeftPerformed += HandleSwipeLeft;
-        PlayerEvents.OnSwipeDownPerformed += HandleSwipeDown;
-        PlayerEvents.OnTapPerformed += HandleTap;
     }
 
-    public override void Exit()
-    {
-        PlayerEvents.OnSwipeRightPerformed -= HandleSwipeRight;
-        PlayerEvents.OnSwipeLeftPerformed -= HandleSwipeLeft;
-        PlayerEvents.OnSwipeDownPerformed -= HandleSwipeDown;
-        PlayerEvents.OnTapPerformed -= HandleTap;
-    }
+    public override void Exit() { }
 
-    public override void Tick(float deltaTime)
-    {
-        // HandleHorizontalMovement(deltaTime, stateMachine.CurrentLane, 0);
-    }
+    public override void Tick(float deltaTime) { }
 
-    private void HandleSwipeRight()
-    {
 
-    }
-
-    private void HandleSwipeLeft()
-    {
-
-    }
-
-    private void HandleSwipeDown()
-    {
-
-    }
-
-    private void HandleTap(Vector2 vector)
+    public void OnTap()
     {
         bool isEnemyKilled = stateMachine.EnemyDetector.AttackEnemy();
         if (isEnemyKilled)
@@ -56,4 +25,12 @@ public class CharacterPushingState : CharacterBaseState
             stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));
         }
     }
+
+    public void OnSwipeUp() { }
+
+    public void OnSwipeRight() { }
+
+    public void OnSwipeLeft() { }
+
+    public void OnSwipeDown() { }
 }

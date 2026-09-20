@@ -14,7 +14,6 @@ public class CharacterInteractionService : IInitializable, IDisposable
     public event Action OnSwipeRight;
 
     public event Action<Vector2> OnTap;
-    public event Action<Vector2> OnLongPress;
 
     private Vector2 startPos;
     private Vector2 currentPos;
@@ -75,13 +74,7 @@ public class CharacterInteractionService : IInitializable, IDisposable
         float duration = Time.time - startTime;
         if (duration <= config.TapMaxDuration)
         {
-            // OnTap?.Invoke(currentPos);
-            PlayerEvents.OnTapPerformed?.Invoke(currentPos);
-        }
-        else if (duration >= config.LongPressMinDuration)
-        {
-            // OnLongPress?.Invoke(currentPos);
-            PlayerEvents.OnLongPressPerformed?.Invoke(currentPos);
+            OnTap?.Invoke(currentPos);
         }
     }
 
@@ -89,13 +82,13 @@ public class CharacterInteractionService : IInitializable, IDisposable
     {
         if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
         {
-            if (delta.x > 0) PlayerEvents.OnSwipeRightPerformed?.Invoke(); /*OnSwipeRight?.Invoke();*/
-            else /*OnSwipeLeft?.Invoke();*/ PlayerEvents.OnSwipeLeftPerformed?.Invoke();
+            if (delta.x > 0) OnSwipeRight?.Invoke();
+            else OnSwipeLeft?.Invoke();
         }
         else
         {
-            if (delta.y > 0) /* OnSwipeUp?.Invoke(); */ PlayerEvents.OnSwipeUpPerformed?.Invoke();
-            else /* OnSwipeDown?.Invoke(); */ PlayerEvents.OnSwipeDownPerformed?.Invoke();
+            if (delta.y > 0) OnSwipeUp?.Invoke();
+            else OnSwipeDown?.Invoke();
         }
     }
 }

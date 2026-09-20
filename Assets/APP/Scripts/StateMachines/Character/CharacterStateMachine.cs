@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using VContainer;
 
-public class CharacterStateMachine : StateMachine
+public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation
 {
     [field: SerializeField] public Animator Animator { get; private set; }
     [field: SerializeField] public ObstacleDetector ObstacleDetector { get; private set; }
@@ -11,7 +11,6 @@ public class CharacterStateMachine : StateMachine
 
     public bool isCheckPoint = false;
     public bool isFalling = false;
-
 
     public int CurrentLane { get; set; } = 0;
     public GameConfigData Config { get; private set; }
@@ -40,7 +39,6 @@ public class CharacterStateMachine : StateMachine
         EnemyDetector.OnClosestEnemyChanged -= HandleClosestEnemyChanged;
 
         Target.OnPulled -= HandlePulled;
-
     }
 
     private void Start()
@@ -50,6 +48,8 @@ public class CharacterStateMachine : StateMachine
 
     private void HandleClosestEnemyChanged(Enemy closestEnemy)
     {
+        Debug.Log("[Event] OnClosestEnemyChanged from EnemyDetector ");
+
         if (closestEnemy != null && !isFalling)
         {
             SwitchState(new CharacterPushingState(this));
@@ -58,11 +58,14 @@ public class CharacterStateMachine : StateMachine
 
     private void HandleTakeDamage(float knockBack)
     {
+        Debug.Log("[Event] OnTakeDamage from ObstacleDetector ");
         if (!isFalling) SwitchState(new CharacterImpactState(this, knockBack));
     }
 
     private void HandleCheckPoint()
     {
+        Debug.Log("[Event] OnCheckPoint from ObstacleDetector ");
+
         if (!isCheckPoint)
         {
             isCheckPoint = true;
@@ -73,8 +76,20 @@ public class CharacterStateMachine : StateMachine
 
     private void HandlePulled()
     {
-        Debug.Log("Your caracter being pulled!");
+        Debug.Log("[Event] OnClosestEnemyChanged from Target");
         isFalling = true;
         SwitchState(new CharacterFallState(this));
     }
+
+    public void OnSwipeUp() => (currentState as ISwipe)?.OnSwipeUp();
+    public void OnSwipeRight() => (currentState as ISwipe)?.OnSwipeRight();
+    public void OnSwipeLeft() => (currentState as ISwipe)?.OnSwipeLeft();
+    public void OnSwipeDown() => (currentState as ISwipe)?.OnSwipeDown();
+
+    public void OnTap() => (currentState as ITap)?.OnTap();
+
+    public void OnFallCompleted() => (currentState as IAnimation)?.OnFallCompleted();
+    public void OnFallBehindCompleted() => (currentState as IAnimation)?.OnFallBehindCompleted();
+    public void OnGettingUpCompleted() => (currentState as IAnimation)?.OnGettingUpCompleted();
+    public void OnStandingUpCompleted() => (currentState as IAnimation)?.OnStandingUpCompleted();
 }

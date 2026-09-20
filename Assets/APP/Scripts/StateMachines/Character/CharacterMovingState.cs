@@ -1,25 +1,18 @@
 using System;
 using UnityEngine;
 
-public class CharacterMovingState : CharacterBaseState
+public class CharacterMovingState : CharacterBaseState, ITap, ISwipe
 {
     private readonly int MovingBlendTreeHash = Animator.StringToHash("MovingBlendTree");
     private readonly int HorizontalHash = Animator.StringToHash("Horizontal");
     private readonly int VerticalHash = Animator.StringToHash("Vertical");
-
     private float targetVertical;
 
     public CharacterMovingState(CharacterStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        Debug.Log("character state: CharacterMovingState");
-
         targetVertical = stateMachine.Config.minVerticalBlend;
-        PlayerEvents.OnSwipeRightPerformed += HandleSwipeRight;
-        PlayerEvents.OnSwipeLeftPerformed += HandleSwipeLeft;
-        PlayerEvents.OnTapPerformed += HandleTap;
-
         stateMachine.Animator.CrossFadeInFixedTime(MovingBlendTreeHash, stateMachine.Config.crossFadeDuration);
     }
 
@@ -30,14 +23,9 @@ public class CharacterMovingState : CharacterBaseState
         HandleVerticalMovement(deltaTime, stateMachine.Animator.GetFloat(VerticalHash));
     }
 
-    public override void Exit()
-    {
-        PlayerEvents.OnSwipeRightPerformed -= HandleSwipeRight;
-        PlayerEvents.OnSwipeLeftPerformed -= HandleSwipeLeft;
-        PlayerEvents.OnTapPerformed -= HandleTap;
-    }
+    public override void Exit() { }
 
-    private void HandleTap(Vector2 vector)
+    public void OnTap()
     {
         targetVertical = Mathf.Clamp(
             targetVertical + stateMachine.Config.verticalStep
@@ -47,13 +35,16 @@ public class CharacterMovingState : CharacterBaseState
         );
     }
 
-    private void HandleSwipeRight()
+    public void OnSwipeRight()
     {
         stateMachine.CurrentLane = Mathf.Clamp(stateMachine.CurrentLane + 1, -stateMachine.Config.maxLaneIndex, stateMachine.Config.maxLaneIndex);
     }
 
-    private void HandleSwipeLeft()
+    public void OnSwipeLeft()
     {
         stateMachine.CurrentLane = Mathf.Clamp(stateMachine.CurrentLane - 1, -stateMachine.Config.maxLaneIndex, stateMachine.Config.maxLaneIndex);
     }
+
+    public void OnSwipeUp() { }
+    public void OnSwipeDown() { }
 }

@@ -6,7 +6,6 @@ public class GameConfigData : ScriptableObject
     [Header("Swipe Settings")]
     public float SwipeMinDistance = 50f;
     public float TapMaxDuration = 0.2f;
-    public float LongPressMinDuration = 0.5f;
 
     [Header("Character Physical Movement")] // "Fisik" diubah ke "Physical"
     public float characterMinimumSpeed = 1f;

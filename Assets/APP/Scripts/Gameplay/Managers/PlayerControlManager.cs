@@ -6,11 +6,14 @@ using VContainer.Unity;
 public class PlayerControlManager : IInitializable, IDisposable
 {
     private CharacterInteractionService characterInteractionService;
+    private CharacterStateMachine characterStateMachine;
 
     [Inject]
-    public void Construct(CharacterInteractionService characterInteractionService)
+    public void Construct(CharacterInteractionService characterInteractionService,
+    CharacterStateMachine characterStateMachine)
     {
         this.characterInteractionService = characterInteractionService;
+        this.characterStateMachine = characterStateMachine;
     }
 
     public void Initialize()
@@ -19,9 +22,7 @@ public class PlayerControlManager : IInitializable, IDisposable
         characterInteractionService.OnSwipeDown += HandleSwipeDown;
         characterInteractionService.OnSwipeLeft += HandleSwipeLeft;
         characterInteractionService.OnSwipeRight += HandleSwipeRight;
-
         characterInteractionService.OnTap += HandleTap;
-        characterInteractionService.OnLongPress += HandleLongPress;
     }
 
     public void Dispose()
@@ -30,44 +31,13 @@ public class PlayerControlManager : IInitializable, IDisposable
         characterInteractionService.OnSwipeDown -= HandleSwipeDown;
         characterInteractionService.OnSwipeLeft -= HandleSwipeLeft;
         characterInteractionService.OnSwipeRight -= HandleSwipeRight;
-
         characterInteractionService.OnTap -= HandleTap;
-        characterInteractionService.OnLongPress -= HandleLongPress;
     }
 
-    private void HandleSwipeUp()
-    {
-        Debug.Log("UP SWIPE detected");
-        // PlayerEvents.OnSwipeUpPerformed?.Invoke();
-    }
+    private void HandleSwipeUp() => (characterStateMachine as ISwipe)?.OnSwipeUp();
+    private void HandleSwipeDown() => (characterStateMachine as ISwipe)?.OnSwipeDown();
+    private void HandleSwipeLeft() => (characterStateMachine as ISwipe)?.OnSwipeLeft();
+    private void HandleSwipeRight() => (characterStateMachine as ISwipe)?.OnSwipeRight();
 
-    private void HandleSwipeDown()
-    {
-        Debug.Log("DOWN SWIPE detected");
-        // PlayerEvents.OnSwipeDownPerformed?.Invoke();
-    }
-
-    private void HandleSwipeLeft()
-    {
-        Debug.Log("LEFT SWIPE detected");
-        // PlayerEvents.OnSwipeLeftPerformed?.Invoke();
-    }
-
-    private void HandleSwipeRight()
-    {
-        Debug.Log("RIGHT SWIPE detected");
-        // PlayerEvents.OnSwipeRightPerformed?.Invoke();
-    }
-
-    private void HandleTap(Vector2 screenPos)
-    {
-        Debug.Log($"TAP detected");
-        // PlayerEvents.OnTapPerformed?.Invoke(screenPos);
-    }
-
-    private void HandleLongPress(Vector2 screenPos)
-    {
-        Debug.Log($"LONG PRESS detected");
-        // PlayerEvents.OnLongPressPerformed?.Invoke(screenPos);
-    }
+    private void HandleTap(Vector2 screenPos) => (characterStateMachine as ITap)?.OnTap();
 }

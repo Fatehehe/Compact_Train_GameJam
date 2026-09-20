@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyAttackState : EnemyBaseState
 {
-    private readonly int AttackHash = Animator.StringToHash("Fall");
+    private readonly int AttackHash = Animator.StringToHash("Attack");
     private const float CrossFadeDuration = 0.1f;
     private int pullDamage = 1;
 

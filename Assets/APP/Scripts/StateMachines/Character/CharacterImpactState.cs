@@ -1,37 +1,24 @@
+using System;
 using UnityEngine;
 
-public class CharacterImpactState : CharacterBaseState
+public class CharacterImpactState : CharacterBaseState, IAnimation
 {
     private readonly int ImpactHash = Animator.StringToHash("Fall");
-    private float duration = .5f;
-    private float currentKnockbackSpeed;
-
-    public CharacterImpactState(CharacterStateMachine stateMachine, float knockBack) : base(stateMachine)
-    {
-        currentKnockbackSpeed = knockBack;
-    }
+    private readonly int StandingUpHash = Animator.StringToHash("Standing Up");
+    public CharacterImpactState(CharacterStateMachine stateMachine, float knockBack) : base(stateMachine) { }
 
     public override void Enter()
     {
-        Debug.Log("character state: CharacterImpactState");
-
         stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, stateMachine.Config.crossFadeDuration);
     }
 
-    public override void Tick(float deltaTime)
-    {
-        stateMachine.transform.Translate(Vector3.back * currentKnockbackSpeed * deltaTime);
-        currentKnockbackSpeed = Mathf.Lerp(currentKnockbackSpeed, 0f, deltaTime * 5f);
+    public override void Exit() { }
 
-        duration -= deltaTime;
-        if (duration <= 0f)
-        {
-            stateMachine.SwitchState(new CharacterMovingState(stateMachine));
-        }
-    }
+    public override void Tick(float deltaTime) { }
 
-    public override void Exit()
-    {
+    public void OnFallCompleted() => stateMachine.Animator.CrossFadeInFixedTime(StandingUpHash, stateMachine.Config.crossFadeDuration);
+    public void OnStandingUpCompleted() => stateMachine.SwitchState(new CharacterMovingState(stateMachine));
 
-    }
+    public void OnFallBehindCompleted() { }
+    public void OnGettingUpCompleted() { }
 }

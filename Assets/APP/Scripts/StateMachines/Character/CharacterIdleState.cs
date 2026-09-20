@@ -1,30 +1,18 @@
 using System;
 using UnityEngine;
 
-public class CharacterIdleState : CharacterBaseState
+public class CharacterIdleState : CharacterBaseState, ITap
 {
+    private readonly int ImpactHash = Animator.StringToHash("Idle");
 
     public CharacterIdleState(CharacterStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        Debug.Log("character state: CharacterIdleState");
-
-        PlayerEvents.OnTapPerformed += HandleTap;
+        stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, stateMachine.Config.crossFadeDuration);
     }
 
-    private void HandleTap(Vector2 vector)
-    {
-        stateMachine.SwitchState(new CharacterMovingState(stateMachine));
-    }
-
-    public override void Exit()
-    {
-        PlayerEvents.OnTapPerformed -= HandleTap;
-    }
-
-    public override void Tick(float deltaTime)
-    {
-
-    }
+    public override void Exit() { }
+    public override void Tick(float deltaTime) { }
+    public void OnTap() => stateMachine.SwitchState(new CharacterMovingState(stateMachine));
 }
