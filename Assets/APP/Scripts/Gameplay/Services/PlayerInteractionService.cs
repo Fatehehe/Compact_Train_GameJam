@@ -8,6 +8,8 @@ public class PlayerInteractionService : IInitializable, IDisposable
     private PlayerDetector playerDetector;
     private CharacterStateMachine characterStateMachine;
 
+    public event Action OnCheckPoint;
+
     [Inject]
     public void Construct(PlayerDetector playerDetector, CharacterStateMachine characterStateMachine)
     {
@@ -31,5 +33,9 @@ public class PlayerInteractionService : IInitializable, IDisposable
     {
         (characterStateMachine as IPlayer)?.OnTakeDamage(damage);
     }
-    private void HandleCheckPoint() => (characterStateMachine as IPlayer)?.OnCheckPoint();
+    private void HandleCheckPoint()
+    {
+        OnCheckPoint?.Invoke();
+        (characterStateMachine as IPlayer)?.OnCheckPoint();
+    }
 }

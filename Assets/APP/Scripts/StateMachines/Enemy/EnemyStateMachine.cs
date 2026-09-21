@@ -11,7 +11,7 @@ public class EnemyStateMachine : StateMachine
     public GameConfigData Config { get; private set; }
     public CharacterStateMachine CharacterSM { get; private set; }
 
-    public float MoveSpeed = 5f;
+    public float MoveSpeed = 100f;
 
     [Inject]
     public void Construct(GameConfigData config, CharacterStateMachine characterSM)

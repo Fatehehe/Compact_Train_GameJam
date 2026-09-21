@@ -12,7 +12,7 @@ public class PlayerDetector : MonoBehaviour
     {
         if (other.TryGetComponent(out IDestroyable destroyable))
         {
-            OnTakeDamage?.Invoke(defaultKnockback);
+            OnTakeDamage?.Invoke(destroyable.GetKnockBack());
             destroyable.DestroyObject();
         }
         else if (other.TryGetComponent(out ICheckPoint checkpoint))

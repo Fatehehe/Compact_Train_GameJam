@@ -3,6 +3,11 @@ using UnityEngine;
 public class CheckPoint : MonoBehaviour, ICheckPoint
 {
     [SerializeField] private Collider myCollider;
+
+    [SerializeField] private Transform LeftTransform;
+    [SerializeField] private Transform RightTransform;
+    [SerializeField] private Transform BehindTransform;
+
     public bool hasTriggered = false;
     public bool HasTriggered() => hasTriggered;
 
