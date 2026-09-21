@@ -30,7 +30,7 @@ public class GameplayManager : IInitializable, IDisposable
     private void HandleFinishReached()
     {
         playerManager.StopCharacter();
-        // NextLevel();
+        // enemyManager.StopAllEnemies();
     }
 
     private void NextLevel()

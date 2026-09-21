@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterFallState : CharacterBaseState, ITap, IAnimation
+public class CharacterFallState : CharacterBaseState, ITap, IAnimation, IPlayer
 {
     private readonly int FallHash = Animator.StringToHash("Fall Behind");
     private readonly int GettingUpHash = Animator.StringToHash("Getting Up");
@@ -59,7 +59,7 @@ public class CharacterFallState : CharacterBaseState, ITap, IAnimation
 
     public void OnGettingUpCompleted()
     {
-        stateMachine.Target.ResetHp();
+        // stateMachine.Target.ResetHp();
         stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));
         stateMachine.isFalling = false;
     }
@@ -67,4 +67,9 @@ public class CharacterFallState : CharacterBaseState, ITap, IAnimation
     public void OnFallCompleted() { }
     public void OnStandingUpCompleted() { }
     public void OnStopAnimation() { }
+
+    public Transform GetTransform() => stateMachine.GetTransform();
+    public void OnCheckPoint() { }
+    public void OnTakeDamage(float damage) { }
+    public void OnKnockedOut() { }
 }

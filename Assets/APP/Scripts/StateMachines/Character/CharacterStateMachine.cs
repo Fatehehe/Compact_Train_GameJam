@@ -7,7 +7,6 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     [field: SerializeField] public Animator Animator { get; private set; }
     [field: SerializeField] public PlayerDetector PlayerDetector { get; private set; }
     [field: SerializeField] public EnemyDetector EnemyDetector { get; private set; }
-    [field: SerializeField] public Target Target { get; private set; }
 
     public bool isCheckPoint = false;
     public bool isFalling = false;
@@ -23,14 +22,14 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
 
     private void OnEnable()
     {
-        EnemyDetector.OnClosestEnemyChanged += HandleClosestEnemyChanged;
-        Target.OnPulled += HandlePulled;
+        EnemyDetector.OnPushing += HandlePushing;
+        EnemyDetector.OnPulled += HandlePulled;
     }
 
     void OnDisable()
     {
-        EnemyDetector.OnClosestEnemyChanged -= HandleClosestEnemyChanged;
-        Target.OnPulled -= HandlePulled;
+        EnemyDetector.OnPushing -= HandlePushing;
+        EnemyDetector.OnPulled -= HandlePulled;
     }
 
     private void Start()
@@ -38,14 +37,7 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
         SwitchState(new CharacterIdleState(this));
     }
 
-    private void HandleClosestEnemyChanged(Enemy closestEnemy)
-    {
-        if (closestEnemy != null && !isFalling)
-        {
-            SwitchState(new CharacterPushingState(this));
-        }
-    }
-
+    private void HandlePushing() => SwitchState(new CharacterPushingState(this));
     private void HandlePulled()
     {
         isFalling = true;

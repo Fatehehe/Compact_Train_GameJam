@@ -23,6 +23,7 @@ public class PlayerAnimationService : IInitializable, IDisposable
         playerEvents.OnGettingUpCompleted += HandleGettingUpCompleted;
         playerEvents.OnStandingUpCompleted += HandleStandingUpCompleted;
     }
+
     public void Dispose()
     {
         playerEvents.OnFallBehindCompleted -= HandleFallBehindCompleted;

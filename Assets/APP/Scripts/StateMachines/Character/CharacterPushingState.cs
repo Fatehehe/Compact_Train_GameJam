@@ -19,7 +19,7 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe
 
     public void OnTap()
     {
-        bool isEnemyKilled = stateMachine.EnemyDetector.AttackEnemy();
+        bool isEnemyKilled = stateMachine.EnemyDetector.AttackActiveEnemy();
         if (isEnemyKilled)
         {
             stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));

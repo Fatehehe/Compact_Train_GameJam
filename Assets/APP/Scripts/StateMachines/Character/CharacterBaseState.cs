@@ -39,4 +39,14 @@ public abstract class CharacterBaseState : State
 
         stateMachine.Animator.SetFloat(HorizontalHash, animHorizontal, stateMachine.Config.animatorDampTime, deltaTime);
     }
+
+    protected void MoveHorizontal(float deltaTime, int currentLane)
+    {
+        float targetPositionX = currentLane * stateMachine.Config.characterLaneWidth;
+        Vector3 currentPos = stateMachine.transform.position;
+        float newX = Mathf.Lerp(currentPos.x, targetPositionX, deltaTime * stateMachine.Config.characterLaneSwitchSpeed);
+        stateMachine.transform.position = new Vector3(newX, currentPos.y, currentPos.z);
+        float distanceToTarget = targetPositionX - stateMachine.transform.position.x;
+        float animHorizontal = Mathf.Clamp(distanceToTarget, -1f, 1f);
+    }
 }

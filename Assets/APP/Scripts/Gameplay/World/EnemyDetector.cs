@@ -1,101 +1,77 @@
-using System; // Tambahkan ini untuk event Action
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDetector : MonoBehaviour
 {
-    [SerializeField] private Collider myCollider;
-    private readonly List<Collider> alreadyCollidedWith = new();
-    private readonly int tapDamage = 1;
+    private readonly List<IEnemy> detectedEnemies = new();
+    public event Action OnPulled;
+    public event Action OnPushing;
 
-    // Event ini akan terpanggil saat musuh terdekat ditemukan, berubah, atau hilang
-    public event Action<Enemy> OnClosestEnemyChanged;
-
-    private Enemy currentClosestEnemy;
+    private IEnemy currentActiveEnemy;
 
     private void OnEnable()
     {
-        alreadyCollidedWith.Clear();
-        currentClosestEnemy = null;
+        detectedEnemies.Clear();
+        currentActiveEnemy = null;
     }
 
     private void Update()
     {
-        // Cek terus menerus siapa musuh terdekat
-        Enemy closest = GetClosestEnemy();
-
-        // Jika musuh terdekat berubah (atau musuh baru masuk/keluar)
-        if (closest != currentClosestEnemy)
+        for (int i = detectedEnemies.Count - 1; i >= 0; i--)
         {
-            currentClosestEnemy = closest;
-            OnClosestEnemyChanged?.Invoke(currentClosestEnemy); // Panggil event
+            var enemy = detectedEnemies[i];
+            if (enemy == null || enemy.Equals(null) || enemy.IsKnockedOut)
+            {
+                detectedEnemies.RemoveAt(i);
+            }
+        }
+
+        IEnemy latestEnemy = detectedEnemies.Count > 0 ? detectedEnemies[detectedEnemies.Count - 1] : null;
+
+        if (latestEnemy != currentActiveEnemy)
+        {
+            currentActiveEnemy = latestEnemy;
+
+            if (currentActiveEnemy.IsSwipeable)
+            {
+                OnPulled?.Invoke();
+            }
+            else if (currentActiveEnemy.IsPushable)
+            {
+                OnPushing?.Invoke();
+            }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other == myCollider) { return; }
-        if (alreadyCollidedWith.Contains(other)) { return; }
-
-        alreadyCollidedWith.Add(other);
+        if (other.TryGetComponent(out IEnemy enemy))
+        {
+            if (!detectedEnemies.Contains(enemy) && !enemy.IsKnockedOut)
+            {
+                detectedEnemies.Add(enemy);
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (alreadyCollidedWith.Contains(other))
+        if (other.TryGetComponent(out IEnemy enemy))
         {
-            alreadyCollidedWith.Remove(other);
+            if (detectedEnemies.Contains(enemy))
+            {
+                detectedEnemies.Remove(enemy);
+            }
         }
     }
 
-    // Fungsi khusus untuk mencari musuh terdekat saat ini
-    private Enemy GetClosestEnemy()
+    public bool AttackActiveEnemy()
     {
-        Enemy closestEnemy = null;
-        float closestDistanceSqr = Mathf.Infinity;
-        Vector3 currentPosition = transform.position;
-
-        for (int i = alreadyCollidedWith.Count - 1; i >= 0; i--)
+        if (currentActiveEnemy != null && !currentActiveEnemy.IsKnockedOut)
         {
-            Collider col = alreadyCollidedWith[i];
-
-            // Cek jika null atau objek sudah tidak aktif (mati)
-            if (col == null || !col.gameObject.activeInHierarchy)
-            {
-                alreadyCollidedWith.RemoveAt(i);
-                continue;
-            }
-
-            if (col.TryGetComponent<Enemy>(out Enemy enemy))
-            {
-                float dSqrToTarget = (col.transform.position - currentPosition).sqrMagnitude;
-
-                if (dSqrToTarget < closestDistanceSqr)
-                {
-                    closestDistanceSqr = dSqrToTarget;
-                    closestEnemy = enemy;
-                }
-            }
+            return currentActiveEnemy.OnTakeDamage();
         }
-
-        return closestEnemy;
-    }
-
-    public bool AttackEnemy()
-    {
-        // Jika ada musuh terdekat
-        if (currentClosestEnemy != null)
-        {
-            Debug.Log($"Menyerang musuh: {currentClosestEnemy.name} dengan damage {tapDamage}");
-
-            // Asumsi: DealDamage di script Enemy diubah untuk me-return bool (true = mati, false = hidup)
-            // Jika DealDamage kamu saat ini bertipe void, kamu perlu mengubahnya (lihat penjelasan di bawah)
-            bool isKilled = currentClosestEnemy.DealDamage(tapDamage);
-
-            return isKilled; // Kembalikan true jika mati, false jika belum
-        }
-
-        // Jika tidak ada musuh, return false
         return false;
     }
 }

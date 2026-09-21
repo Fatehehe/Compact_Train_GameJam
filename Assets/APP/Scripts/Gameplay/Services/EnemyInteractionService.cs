@@ -1,24 +1,18 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 using VContainer;
 using VContainer.Unity;
 
 public class EnemyInteractionService : IInitializable, IDisposable, ITickable
 {
-    private CharacterStateMachine characterStateMachine;
-    private PlayerInteractionService playerInteractionService;
+    private readonly PlayerInteractionService playerInteractionService;
 
-    public event Action<Vector3> OnEnemyChasingStarted;
-    public event Action<Vector3> OnEnemyDetectingCharacter;
-
-
-    private bool IsCheckPoint = false;
+    public bool IsCheckPointActive { get; private set; } = false;
+    public Vector3 CharacterPosition { get; private set; } = Vector3.zero;
 
     [Inject]
-    public void Construct(CharacterStateMachine characterStateMachine, PlayerInteractionService playerInteractionService)
+    public EnemyInteractionService(PlayerInteractionService playerInteractionService)
     {
-        this.characterStateMachine = characterStateMachine;
         this.playerInteractionService = playerInteractionService;
     }
 
@@ -34,14 +28,12 @@ public class EnemyInteractionService : IInitializable, IDisposable, ITickable
 
     public void Tick()
     {
-        if (!IsCheckPoint) return;
-        OnEnemyDetectingCharacter?.Invoke((characterStateMachine as IPlayer).GetTransform().position);
+        if (!IsCheckPointActive) return;
+        CharacterPosition = playerInteractionService.GetPlayerTransform().position;
     }
 
     private void HandleCharacterCheckPoint()
     {
-        Vector3 position = (characterStateMachine as IPlayer).GetTransform().position;
-        IsCheckPoint = true;
-        OnEnemyChasingStarted?.Invoke(position);
+        IsCheckPointActive = true;
     }
 }

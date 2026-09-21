@@ -2,52 +2,22 @@ using System;
 using UnityEngine;
 using VContainer;
 
-public class EnemyStateMachine : StateMachine
+public class EnemyStateMachine : StateMachine, IEnemy
 {
     [field: SerializeField] public Animator Animator { get; private set; }
-    [field: SerializeField] public Enemy Enemy { get; private set; }
-    [field: SerializeField] public Targeter Targeter { get; private set; }
-
     public GameConfigData Config { get; private set; }
-    public CharacterStateMachine CharacterSM { get; private set; }
 
-    public float MoveSpeed = 100f;
+    public Vector3 targetPosition = Vector3.zero;
+    public float MoveSpeed = 5f;
+
+    public bool IsKnockedOut { get; private set; } = false;
+    public bool IsPushable => (currentState as IEnemy).IsPushable;
+    public bool IsSwipeable => (currentState as IEnemy).IsSwipeable;
 
     [Inject]
-    public void Construct(GameConfigData config, CharacterStateMachine characterSM)
+    public void Construct(GameConfigData config)
     {
         this.Config = config;
-        this.CharacterSM = characterSM;
-    }
-
-    private void OnEnable()
-    {
-        Enemy.OnTakeDamage += HandleTakeDamage;
-        Enemy.OnTakeOut += HandleTakeOut;
-
-        Targeter.OnTargetReached += HandleTargetReached;
-        Targeter.OnTargetDetected += HandleTargetDetected;
-    }
-
-    void OnDisable()
-    {
-        Enemy.OnTakeDamage -= HandleTakeDamage;
-        Enemy.OnTakeOut -= HandleTakeOut;
-
-        Targeter.OnTargetReached -= HandleTargetReached;
-        Targeter.OnTargetDetected -= HandleTargetDetected;
-
-    }
-
-    private void HandleTargetDetected()
-    {
-        if (Targeter.CurrentTarget != null) SwitchState(new EnemyMovingState(this));
-    }
-
-    private void HandleTargetReached()
-    {
-        Debug.Log("Target Reached");
-        SwitchState(new EnemyAttackState(this));
     }
 
     private void Start()
@@ -55,14 +25,21 @@ public class EnemyStateMachine : StateMachine
         SwitchState(new EnemyIdleState(this));
     }
 
-    private void HandleTakeDamage()
+    public void OnChasingPerformed(Vector3 position)
     {
-        Debug.Log("Enemy took damage");
+        targetPosition = position;
+        (currentState as IEnemy)?.OnChasingPerformed(position);
     }
 
-    private void HandleTakeOut()
+    public void OnTargetReached() => (currentState as IEnemy)?.OnTargetReached();
+
+    public void OnStopChasing() => (currentState as IEnemy)?.OnStopChasing();
+
+    public bool OnTakeDamage() => (currentState as IEnemy).OnTakeDamage();
+
+    public void OnKnockedOut()
     {
-        Debug.Log("Enemy is taken out");
-        Destroy(gameObject);
+        IsKnockedOut = true;
+        (currentState as IEnemy)?.OnKnockedOut();
     }
 }

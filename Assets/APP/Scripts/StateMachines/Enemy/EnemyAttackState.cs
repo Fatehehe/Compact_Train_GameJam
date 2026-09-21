@@ -1,56 +1,53 @@
 using UnityEngine;
 
-public class EnemyAttackState : EnemyBaseState
+public class EnemyAttackState : EnemyBaseState, IEnemy
 {
     private readonly int AttackHash = Animator.StringToHash("Attack");
     private const float CrossFadeDuration = 0.1f;
-    private int pullDamage = 1;
 
-    private float attackInterval = 1f; // Jeda waktu antar serangan
-    private float timer; // Timer yang akan berjalan
+    private float attackInterval = 1f;
+    private float timer;
 
-    public EnemyAttackState(EnemyStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public bool IsKnockedOut => false;
+    public bool IsPushable => false;
+    public bool IsSwipeable => true;
+
+    public EnemyAttackState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        Debug.Log("Entering Attack State");
         stateMachine.Animator.CrossFadeInFixedTime(AttackHash, CrossFadeDuration);
-
-        // Atur timer agar musuh bisa langsung menyerang atau menunggu dulu
-        // Jika ingin langsung serang di detik pertama, ubah jadi timer = 0f;
         timer = attackInterval;
-    }
-
-    public override void Exit()
-    {
-
     }
 
     public override void Tick(float deltaTime)
     {
-        // 1. Cek terus menerus apakah target sudah mati/hilang
-        if (stateMachine.Targeter.IsTargetEliminated())
-        {
-            // Jika sudah mati, kembali ke Idle dan HENTIKAN eksekusi di bawahnya
-            stateMachine.SwitchState(new EnemyIdleState(stateMachine));
-            return;
-        }
-
-        // 2. Hitung mundur timer serangan
         timer -= deltaTime;
 
-        // 3. Jika timer habis, lakukan serangan
         if (timer <= 0f)
         {
-            stateMachine.Targeter.PullTarget(pullDamage);
+            // TODO: Tambahkan event/panggilan logika untuk mendamage Player di sini
+            // misal: EnemyInteractionService.HitPlayer();
 
-            // Reset timer agar dia bisa menyerang lagi di siklus berikutnya
-            timer = attackInterval;
-
-            // (Opsional) Jika kamu mau animasi serangannya di-play ulang setiap kali hit:
-            // stateMachine.Animator.CrossFadeInFixedTime(AttackHash, CrossFadeDuration);
+            timer = attackInterval; // Reset timer serangan
         }
     }
+
+    public override void Exit() { }
+
+    public void OnChasingPerformed(Vector3 position)
+    {
+        stateMachine.SwitchState(new EnemyMovingState(stateMachine));
+    }
+
+    public void OnStopChasing()
+    {
+        stateMachine.SwitchState(new EnemyIdleState(stateMachine));
+    }
+
+    public bool OnTakeDamage() { return true; }
+
+    public void OnKnockedOut() { }
+
+    public void OnTargetReached() { }
 }

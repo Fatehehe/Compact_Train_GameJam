@@ -20,12 +20,10 @@ public class PlayerManager : IInitializable, IDisposable
 
     public void Initialize()
     {
-
     }
 
     public void Dispose()
     {
-
     }
 
     public void StopCharacter()

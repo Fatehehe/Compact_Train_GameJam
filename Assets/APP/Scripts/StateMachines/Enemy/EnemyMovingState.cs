@@ -1,21 +1,21 @@
 using UnityEngine;
 
-public class EnemyMovingState : EnemyBaseState
+public class EnemyMovingState : EnemyBaseState, IEnemy
 {
     private readonly int RunHash = Animator.StringToHash("Run");
     private const float CrossFadeDuration = 0.1f;
 
-    public EnemyMovingState(EnemyStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public bool IsKnockedOut => false;
+
+    public bool IsPushable => false;
+
+    public bool IsSwipeable => true;
+
+    public EnemyMovingState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
         stateMachine.Animator.CrossFadeInFixedTime(RunHash, CrossFadeDuration);
-    }
-
-    public override void Exit()
-    {
     }
 
     public override void Tick(float deltaTime)
@@ -23,4 +23,22 @@ public class EnemyMovingState : EnemyBaseState
         FaceTarget();
         MoveToTarget(deltaTime);
     }
+
+    public override void Exit() { }
+
+    public void OnTargetReached()
+    {
+        stateMachine.SwitchState(new EnemyAttackState(stateMachine));
+    }
+
+    public void OnStopChasing()
+    {
+        stateMachine.SwitchState(new EnemyIdleState(stateMachine));
+    }
+
+    public void OnChasingPerformed(Vector3 position) { }
+
+    public bool OnTakeDamage() { return true; }
+
+    public void OnKnockedOut() { }
 }

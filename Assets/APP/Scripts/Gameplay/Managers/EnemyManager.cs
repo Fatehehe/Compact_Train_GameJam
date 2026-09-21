@@ -3,51 +3,60 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-public class EnemyManager : IInitializable, IDisposable
+public class EnemyManager : IInitializable, IDisposable, ITickable
 {
-    private EnemyInteractionService enemyInteractionService;
-    private EnemySpawner enemySpawner;
+    private readonly EnemyInteractionService enemyInteractionService;
+    private readonly EnemySpawner enemySpawner;
+    private readonly IObjectResolver resolver;
 
-    private bool isChasingStart = false;
-    private int spawnCounter = 2;
+    private IEnemy currentEnemy; // Hanya simpan 1 musuh aktif
+    private int spawnCounter = 2; // Total musuh yang akan dispawn bergantian
+    private readonly float catchDistanceSqr = 0.5f * 0.5f; // Jarak tangkap (dikuadratkan)
 
-    [Inject]
-    public void Construct(EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner)
+    [Inject] // Gunakan Constructor Injection agar rapi
+    public EnemyManager(EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner, IObjectResolver resolver)
     {
         this.enemyInteractionService = enemyInteractionService;
         this.enemySpawner = enemySpawner;
+        this.resolver = resolver;
     }
 
-    public void Initialize()
-    {
-        enemyInteractionService.OnEnemyChasingStarted += HandleEnemyChasingStarted;
-        enemyInteractionService.OnEnemyDetectingCharacter += HandleEnemyDetectingCharacter;
-    }
+    public void Initialize() { }
+    public void Dispose() { }
 
-    public void Dispose()
+    public void Tick()
     {
-        enemyInteractionService.OnEnemyChasingStarted -= HandleEnemyChasingStarted;
-        enemyInteractionService.OnEnemyDetectingCharacter -= HandleEnemyDetectingCharacter;
-    }
+        // 1. Jangan ngapa-ngapain kalau player belum sentuh checkpoint
+        if (!enemyInteractionService.IsCheckPointActive) return;
 
-    private void HandleEnemyChasingStarted(Vector3 vector)
-    {
-        isChasingStart = true;
-    }
+        // 2. Cek status musuh saat ini (Apakah kosong? hancur? atau sudah KO?)
+        bool isEnemyDead = (currentEnemy == null || currentEnemy.Equals(null) || currentEnemy.IsKnockedOut);
 
-    private void HandleEnemyDetectingCharacter(Vector3 vector)
-    {
-        if (!isChasingStart) return;
-
-        if (spawnCounter == 1)
+        if (isEnemyDead)
         {
-            spawnCounter--;
-            Spawn(enemySpawner.Prefab, enemySpawner.LeftSpawnPosition.position);
+            // Jika musuh mati, dan masih ada jatah spawn, maka spawn lagi!
+            if (spawnCounter > 0)
+            {
+                spawnCounter--;
+                Spawn(enemySpawner.Prefab, enemySpawner.RightSpawnPosition.position);
+            }
+            return; // Tunggu frame selanjutnya agar musuh sempat terinisialisasi
         }
-        else if (spawnCounter == 2)
+
+        // 3. Jika musuh masih hidup, lakukan logika kejar
+        if (currentEnemy is MonoBehaviour enemyComponent)
         {
-            spawnCounter--;
-            Spawn(enemySpawner.Prefab, enemySpawner.RightSpawnPosition.position);
+            // Hitung jarak ke player
+            float distanceSqr = (enemyInteractionService.CharacterPosition - enemyComponent.transform.position).sqrMagnitude;
+
+            if (distanceSqr <= catchDistanceSqr)
+            {
+                currentEnemy.OnTargetReached();
+            }
+            else
+            {
+                currentEnemy.OnChasingPerformed(enemyInteractionService.CharacterPosition);
+            }
         }
     }
 
@@ -55,7 +64,12 @@ public class EnemyManager : IInitializable, IDisposable
     {
         if (prefab == null) return;
 
-        Quaternion rot = Quaternion.Euler(Vector3.zero);
-        UnityEngine.Object.Instantiate(prefab, position, rot);
+        // Tetap wajib pakai resolver.Instantiate agar VContainer jalan di dalam musuh
+        GameObject newEnemyObj = resolver.Instantiate(prefab, position, Quaternion.identity);
+
+        if (newEnemyObj.TryGetComponent(out IEnemy enemyInterface))
+        {
+            currentEnemy = enemyInterface;
+        }
     }
 }

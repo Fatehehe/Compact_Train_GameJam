@@ -2901,8 +2901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
   <Animator>k__BackingField: {fileID: 1475214819}
-  <Enemy>k__BackingField: {fileID: 992259312}
-  <Targeter>k__BackingField: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
   MoveSpeed: 3
 --- !u!1 &413085907
 GameObject:
@@ -3981,8 +3980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
   <Animator>k__BackingField: {fileID: 487010121}
-  <Enemy>k__BackingField: {fileID: 349107995}
-  <Targeter>k__BackingField: {fileID: 633867037}
+  targetPosition: {x: 0, y: 0, z: 0}
   MoveSpeed: 3
 --- !u!1 &539598322
 GameObject:
@@ -6356,8 +6354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
   <Animator>k__BackingField: {fileID: 1410703657}
-  <Enemy>k__BackingField: {fileID: 2040159046}
-  <Targeter>k__BackingField: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
   MoveSpeed: 3
 --- !u!1 &988687648
 GameObject:
@@ -8197,8 +8194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
   <Animator>k__BackingField: {fileID: 953930155}
-  <Enemy>k__BackingField: {fileID: 1613506700}
-  <Targeter>k__BackingField: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
   MoveSpeed: 3
 --- !u!1 &1189704867
 GameObject:
@@ -9047,7 +9043,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5802886160892309308, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10736,7 +10732,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1550517415
 Transform:
   m_ObjectHideFlags: 0
@@ -10795,7 +10791,7 @@ Transform:
   m_GameObject: {fileID: 1550651212}
   serializedVersion: 2
   m_LocalRotation: {x: 0.074033424, y: -0, z: -0, w: 0.9972558}
-  m_LocalPosition: {x: -0.39274, y: 1.92762, z: -4.32812}
+  m_LocalPosition: {x: -0.39274, y: 1.92762, z: 91.09188}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11566,7 +11562,7 @@ Transform:
   m_GameObject: {fileID: 1619277080}
   serializedVersion: 2
   m_LocalRotation: {x: 0.074033424, y: 0, z: 0, w: 0.9972558}
-  m_LocalPosition: {x: -0.39274, y: 1.92762, z: -4.32812}
+  m_LocalPosition: {x: -0.39274, y: 1.92762, z: 91.09188}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14742,6 +14738,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 58034630825171620, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
+      propertyPath: m_Size.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 58034630825171620, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
+      propertyPath: m_Size.z
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 972880175669613608, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
       propertyPath: m_Name
       value: Player
@@ -14756,7 +14760,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2293441976813167250, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.42
+      value: 91
       objectReference: {fileID: 0}
     - target: {fileID: 2293441976813167250, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
       propertyPath: m_LocalRotation.w
