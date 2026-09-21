@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterMovingState : CharacterBaseState, ITap, ISwipe
+public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
 {
     private readonly int MovingBlendTreeHash = Animator.StringToHash("MovingBlendTree");
     private readonly int HorizontalHash = Animator.StringToHash("Horizontal");
@@ -47,4 +47,19 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe
 
     public void OnSwipeUp() { }
     public void OnSwipeDown() { }
+
+    public Transform GetTransform() => stateMachine.GetTransform();
+    public void OnCheckPoint()
+    {
+        stateMachine.CurrentLane = 0;
+        stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));
+    }
+
+    public void OnTakeDamage(float damage)
+    {
+        Debug.Log("Damage taken");
+        stateMachine.SwitchState(new CharacterImpactState(stateMachine, damage));
+    }
+
+    public void OnKnockedOut() { }
 }

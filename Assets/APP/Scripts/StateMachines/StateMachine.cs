@@ -16,5 +16,4 @@ public abstract class StateMachine : MonoBehaviour
     {
         currentState?.Tick(Time.deltaTime);
     }
-    public Transform GetTransform() => transform;
 }

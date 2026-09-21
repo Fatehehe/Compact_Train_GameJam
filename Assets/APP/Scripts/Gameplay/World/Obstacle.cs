@@ -1,23 +1,12 @@
 using UnityEngine;
 
-public class Obstacle : MonoBehaviour
+public class Obstacle : MonoBehaviour, IDestroyable
 {
     [SerializeField] private Collider myCollider;
     private readonly float knockback = 10f;
+    public float GetKnockBack() => knockback;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other == myCollider) { return; }
-
-        if (other.TryGetComponent(out ObstacleDetector ObstacleDetector))
-        {
-            ObstacleDetector.DealDamage(knockback);
-
-            ObstacleDisappear();
-        }
-    }
-
-    private void ObstacleDisappear()
+    public void DestroyObject()
     {
         Destroy(gameObject);
     }

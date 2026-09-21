@@ -4,7 +4,7 @@ using VContainer;
 using VContainer.Unity;
 
 
-public class PlayerAnimationManager : IInitializable, IDisposable
+public class PlayerAnimationService : IInitializable, IDisposable
 {
     private CharacterStateMachine characterStateMachine;
     private PlayerEvents playerEvents;

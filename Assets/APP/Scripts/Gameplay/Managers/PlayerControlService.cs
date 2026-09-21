@@ -3,7 +3,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-public class PlayerControlManager : IInitializable, IDisposable
+public class PlayerControlService : IInitializable, IDisposable
 {
     private CharacterInteractionService characterInteractionService;
     private CharacterStateMachine characterStateMachine;

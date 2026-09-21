@@ -1,23 +1,15 @@
 using UnityEngine;
 
-public class CheckPoint : MonoBehaviour
+public class CheckPoint : MonoBehaviour, ICheckPoint
 {
     [SerializeField] private Collider myCollider;
-    private bool hasTriggered = false;
+    public bool hasTriggered = false;
+    public bool HasTriggered() => hasTriggered;
 
-    private void OnTriggerEnter(Collider other)
+    public void OnCheckPoint()
     {
         if (hasTriggered) { return; }
-
-        if (other == myCollider) { return; }
-
-        if (other.TryGetComponent(out ObstacleDetector obstacleDetector))
-        {
-            hasTriggered = true;
-
-            Debug.Log($"CheckPoint triggered by: {other.name}");
-            obstacleDetector.CheckPoint();
-        }
+        hasTriggered = true;
     }
 
     private void OnTriggerExit(Collider other)

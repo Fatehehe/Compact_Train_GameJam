@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using VContainer;
 
-public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation
+public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPlayer
 {
     [field: SerializeField] public Animator Animator { get; private set; }
-    [field: SerializeField] public ObstacleDetector ObstacleDetector { get; private set; }
+    [field: SerializeField] public PlayerDetector PlayerDetector { get; private set; }
     [field: SerializeField] public EnemyDetector EnemyDetector { get; private set; }
     [field: SerializeField] public Target Target { get; private set; }
 
@@ -23,21 +23,13 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation
 
     private void OnEnable()
     {
-        ObstacleDetector.OnTakeDamage += HandleTakeDamage;
-        ObstacleDetector.OnCheckPoint += HandleCheckPoint;
-
         EnemyDetector.OnClosestEnemyChanged += HandleClosestEnemyChanged;
-
         Target.OnPulled += HandlePulled;
     }
 
     void OnDisable()
     {
-        ObstacleDetector.OnTakeDamage -= HandleTakeDamage;
-        ObstacleDetector.OnCheckPoint -= HandleCheckPoint;
-
         EnemyDetector.OnClosestEnemyChanged -= HandleClosestEnemyChanged;
-
         Target.OnPulled -= HandlePulled;
     }
 
@@ -48,35 +40,14 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation
 
     private void HandleClosestEnemyChanged(Enemy closestEnemy)
     {
-        Debug.Log("[Event] OnClosestEnemyChanged from EnemyDetector ");
-
         if (closestEnemy != null && !isFalling)
         {
             SwitchState(new CharacterPushingState(this));
         }
     }
 
-    private void HandleTakeDamage(float knockBack)
-    {
-        Debug.Log("[Event] OnTakeDamage from ObstacleDetector ");
-        if (!isFalling) SwitchState(new CharacterImpactState(this, knockBack));
-    }
-
-    private void HandleCheckPoint()
-    {
-        Debug.Log("[Event] OnCheckPoint from ObstacleDetector ");
-
-        if (!isCheckPoint)
-        {
-            isCheckPoint = true;
-            CurrentLane = 0;
-            SwitchState(new CharacterCheckPointState(this));
-        }
-    }
-
     private void HandlePulled()
     {
-        Debug.Log("[Event] OnClosestEnemyChanged from Target");
         isFalling = true;
         SwitchState(new CharacterFallState(this));
     }
@@ -92,4 +63,9 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation
     public void OnFallBehindCompleted() => (currentState as IAnimation)?.OnFallBehindCompleted();
     public void OnGettingUpCompleted() => (currentState as IAnimation)?.OnGettingUpCompleted();
     public void OnStandingUpCompleted() => (currentState as IAnimation)?.OnStandingUpCompleted();
+
+    public Transform GetTransform() => transform;
+    public void OnCheckPoint() => (currentState as IPlayer)?.OnCheckPoint();
+    public void OnTakeDamage(float damage) => (currentState as IPlayer)?.OnTakeDamage(damage);
+    public void OnKnockedOut() => (currentState as IPlayer)?.OnKnockedOut();
 }
