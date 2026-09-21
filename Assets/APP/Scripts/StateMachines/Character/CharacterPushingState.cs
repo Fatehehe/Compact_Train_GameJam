@@ -14,8 +14,14 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe
 
     public override void Exit() { }
 
-    public override void Tick(float deltaTime) { }
-
+    public override void Tick(float deltaTime)
+    {
+        if (stateMachine.EnemyDetector.IsDetectingSwipeable())
+        {
+            stateMachine.SwitchState(new CharacterFallState(stateMachine));
+            return;
+        }
+    }
 
     public void OnTap()
     {

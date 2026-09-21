@@ -2,6 +2,7 @@ using UnityEngine;
 
 public interface IEnemy
 {
+    // int HP { get; }
     bool IsKnockedOut { get; }
     bool IsPushable { get; }
     bool IsSwipeable { get; }
@@ -10,4 +11,6 @@ public interface IEnemy
     bool OnTakeDamage();
     void OnKnockedOut();
     void OnTargetReached();
+
+    void OnReturn(Vector3 position);
 }

@@ -42,4 +42,6 @@ public class EnemyStateMachine : StateMachine, IEnemy
         IsKnockedOut = true;
         (currentState as IEnemy)?.OnKnockedOut();
     }
+
+    public void OnReturn(Vector3 position) => (currentState as IEnemy).OnReturn(position);
 }

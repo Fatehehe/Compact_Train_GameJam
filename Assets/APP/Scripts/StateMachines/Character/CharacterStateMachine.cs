@@ -20,28 +20,9 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
         this.Config = config;
     }
 
-    private void OnEnable()
-    {
-        EnemyDetector.OnPushing += HandlePushing;
-        EnemyDetector.OnPulled += HandlePulled;
-    }
-
-    void OnDisable()
-    {
-        EnemyDetector.OnPushing -= HandlePushing;
-        EnemyDetector.OnPulled -= HandlePulled;
-    }
-
     private void Start()
     {
         SwitchState(new CharacterIdleState(this));
-    }
-
-    private void HandlePushing() => SwitchState(new CharacterPushingState(this));
-    private void HandlePulled()
-    {
-        isFalling = true;
-        SwitchState(new CharacterFallState(this));
     }
 
     public void OnSwipeUp() => (currentState as ISwipe)?.OnSwipeUp();

@@ -57,7 +57,6 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
 
     public void OnTakeDamage(float damage)
     {
-        Debug.Log("Damage taken");
         stateMachine.SwitchState(new CharacterImpactState(stateMachine, damage));
     }
 

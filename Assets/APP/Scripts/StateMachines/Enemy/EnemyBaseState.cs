@@ -34,4 +34,20 @@ public abstract class EnemyBaseState : State
         direction.y = 0f;
         Move(direction * stateMachine.MoveSpeed, deltaTime);
     }
+
+    protected void MoveToSpecific(Vector3 target, float deltaTime)
+    {
+        Vector3 direction = (target - stateMachine.transform.position).normalized;
+        direction.y = 0f;
+        Move(direction * stateMachine.MoveSpeed, deltaTime);
+    }
+
+    protected void FaceSpecific(Vector3 target)
+    {
+        Vector3 lookPosition = target - stateMachine.transform.position;
+        lookPosition.y = 0f;
+
+        if (lookPosition != Vector3.zero)
+            stateMachine.transform.rotation = Quaternion.LookRotation(lookPosition);
+    }
 }

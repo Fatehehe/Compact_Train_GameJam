@@ -7,48 +7,65 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 {
     private readonly EnemyInteractionService enemyInteractionService;
     private readonly EnemySpawner enemySpawner;
-    private readonly IObjectResolver resolver;
+    private IEnemy currentEnemy;
+    private int spawnCounter = 2;
+    private readonly float catchDistanceSqr = 0.5f * 0.5f;
 
-    private IEnemy currentEnemy; // Hanya simpan 1 musuh aktif
-    private int spawnCounter = 2; // Total musuh yang akan dispawn bergantian
-    private readonly float catchDistanceSqr = 0.5f * 0.5f; // Jarak tangkap (dikuadratkan)
-
-    [Inject] // Gunakan Constructor Injection agar rapi
-    public EnemyManager(EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner, IObjectResolver resolver)
+    [Inject]
+    public EnemyManager(EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner)
     {
         this.enemyInteractionService = enemyInteractionService;
         this.enemySpawner = enemySpawner;
-        this.resolver = resolver;
     }
 
-    public void Initialize() { }
-    public void Dispose() { }
+    public void Initialize()
+    {
+        EnemyEvents.OnAttackCompleted += HandleAttackCompleted;
+        EnemyEvents.OnReturnCompleted += HandleReturnCompleted;
+    }
+    public void Dispose()
+    {
+        EnemyEvents.OnAttackCompleted -= HandleAttackCompleted;
+        EnemyEvents.OnReturnCompleted -= HandleReturnCompleted;
+    }
+
+    private void HandleReturnCompleted()
+    {
+        // Hancurkan objek musuh yang lama agar tidak menumpuk di scene
+        if (currentEnemy is MonoBehaviour enemyComponent)
+        {
+            UnityEngine.Object.Destroy(enemyComponent.gameObject);
+        }
+
+        // Null-kan currentEnemy. 
+        // Ini akan membuat isEnemyDead = true di Tick(), sehingga musuh baru akan spawn.
+        currentEnemy = null;
+    }
+
+    private void HandleAttackCompleted()
+    {
+        currentEnemy?.OnReturn(enemySpawner.LeftSpawnPosition.position);
+    }
 
     public void Tick()
     {
-        // 1. Jangan ngapa-ngapain kalau player belum sentuh checkpoint
         if (!enemyInteractionService.IsCheckPointActive) return;
 
-        // 2. Cek status musuh saat ini (Apakah kosong? hancur? atau sudah KO?)
-        bool isEnemyDead = (currentEnemy == null || currentEnemy.Equals(null) || currentEnemy.IsKnockedOut);
+        bool isEnemyDead = currentEnemy == null || currentEnemy.Equals(null) || currentEnemy.IsKnockedOut;
 
         if (isEnemyDead)
         {
-            // Jika musuh mati, dan masih ada jatah spawn, maka spawn lagi!
             if (spawnCounter > 0)
             {
                 spawnCounter--;
                 Spawn(enemySpawner.Prefab, enemySpawner.RightSpawnPosition.position);
             }
-            return; // Tunggu frame selanjutnya agar musuh sempat terinisialisasi
+            return;
         }
 
-        // 3. Jika musuh masih hidup, lakukan logika kejar
         if (currentEnemy is MonoBehaviour enemyComponent)
         {
-            // Hitung jarak ke player
             float distanceSqr = (enemyInteractionService.CharacterPosition - enemyComponent.transform.position).sqrMagnitude;
-
             if (distanceSqr <= catchDistanceSqr)
             {
                 currentEnemy.OnTargetReached();
@@ -62,12 +79,8 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 
     private void Spawn(GameObject prefab, Vector3 position)
     {
-        if (prefab == null) return;
-
-        // Tetap wajib pakai resolver.Instantiate agar VContainer jalan di dalam musuh
-        GameObject newEnemyObj = resolver.Instantiate(prefab, position, Quaternion.identity);
-
-        if (newEnemyObj.TryGetComponent(out IEnemy enemyInterface))
+        GameObject obj = UnityEngine.Object.Instantiate(prefab, position, Quaternion.identity);
+        if (obj.TryGetComponent(out IEnemy enemyInterface))
         {
             currentEnemy = enemyInterface;
         }

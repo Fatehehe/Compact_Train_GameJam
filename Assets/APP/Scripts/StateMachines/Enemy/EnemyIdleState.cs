@@ -41,8 +41,15 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
             hp--;
             return false;
         }
+        stateMachine.SwitchState(new EnemyPushedState(stateMachine));
+
         return true;
     }
 
     public void OnKnockedOut() { }
+
+    public void OnReturn(Vector3 position)
+    {
+
+    }
 }

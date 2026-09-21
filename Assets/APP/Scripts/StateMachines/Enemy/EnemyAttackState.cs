@@ -16,6 +16,7 @@ public class EnemyAttackState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
+        Debug.Log("enter attack");
         stateMachine.Animator.CrossFadeInFixedTime(AttackHash, CrossFadeDuration);
         timer = attackInterval;
     }
@@ -37,7 +38,7 @@ public class EnemyAttackState : EnemyBaseState, IEnemy
 
     public void OnChasingPerformed(Vector3 position)
     {
-        stateMachine.SwitchState(new EnemyMovingState(stateMachine));
+        // stateMachine.SwitchState(new EnemyMovingState(stateMachine));
     }
 
     public void OnStopChasing()
@@ -50,4 +51,12 @@ public class EnemyAttackState : EnemyBaseState, IEnemy
     public void OnKnockedOut() { }
 
     public void OnTargetReached() { }
+
+    public void OnReturn(Vector3 position)
+    {
+        Debug.Log("Return on state");
+        stateMachine.SwitchState(new EnemyReturningState(stateMachine, position));
+    }
+
+
 }
