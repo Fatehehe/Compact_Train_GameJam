@@ -63,9 +63,11 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     public void OnFallBehindCompleted() => (currentState as IAnimation)?.OnFallBehindCompleted();
     public void OnGettingUpCompleted() => (currentState as IAnimation)?.OnGettingUpCompleted();
     public void OnStandingUpCompleted() => (currentState as IAnimation)?.OnStandingUpCompleted();
+    public void OnStopAnimation() => (currentState as IAnimation)?.OnStopAnimation();
 
     public Transform GetTransform() => transform;
     public void OnCheckPoint() => (currentState as IPlayer)?.OnCheckPoint();
     public void OnTakeDamage(float damage) => (currentState as IPlayer)?.OnTakeDamage(damage);
     public void OnKnockedOut() => (currentState as IPlayer)?.OnKnockedOut();
+
 }

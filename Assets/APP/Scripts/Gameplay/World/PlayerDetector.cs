@@ -5,6 +5,7 @@ public class PlayerDetector : MonoBehaviour
 {
     public event Action<float> OnTakeDamage;
     public event Action OnCheckPoint;
+    public event Action OnFinishReached;
 
     [SerializeField] private float defaultKnockback = 5f;
 
@@ -19,6 +20,10 @@ public class PlayerDetector : MonoBehaviour
         {
             checkpoint.OnCheckPoint();
             if (checkpoint.HasTriggered()) { OnCheckPoint?.Invoke(); }
+        }
+        else if (other.gameObject.CompareTag("FinishPoint"))
+        {
+            OnFinishReached?.Invoke();
         }
     }
 }

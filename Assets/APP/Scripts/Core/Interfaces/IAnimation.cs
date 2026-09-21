@@ -6,4 +6,5 @@ public interface IAnimation
     void OnFallBehindCompleted();
     void OnGettingUpCompleted();
     void OnStandingUpCompleted();
+    void OnStopAnimation();
 }

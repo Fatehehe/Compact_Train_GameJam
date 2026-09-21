@@ -28,6 +28,8 @@ public class GameplayLifetimeScope : LifetimeScope
 
         builder.RegisterEntryPoint<EnemyInteractionService>(Lifetime.Scoped).AsSelf();
         builder.RegisterEntryPoint<EnemyManager>(Lifetime.Scoped).AsSelf();
+        builder.RegisterEntryPoint<PlayerManager>(Lifetime.Scoped).AsSelf();
 
+        builder.RegisterEntryPoint<GameplayManager>(Lifetime.Scoped).AsSelf();
     }
 }

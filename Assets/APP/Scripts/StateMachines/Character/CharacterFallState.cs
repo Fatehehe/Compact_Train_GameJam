@@ -66,4 +66,5 @@ public class CharacterFallState : CharacterBaseState, ITap, IAnimation
 
     public void OnFallCompleted() { }
     public void OnStandingUpCompleted() { }
+    public void OnStopAnimation() { }
 }

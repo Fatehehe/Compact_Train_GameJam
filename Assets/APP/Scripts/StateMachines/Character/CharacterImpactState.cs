@@ -21,4 +21,5 @@ public class CharacterImpactState : CharacterBaseState, IAnimation
 
     public void OnFallBehindCompleted() { }
     public void OnGettingUpCompleted() { }
+    public void OnStopAnimation() { }
 }
