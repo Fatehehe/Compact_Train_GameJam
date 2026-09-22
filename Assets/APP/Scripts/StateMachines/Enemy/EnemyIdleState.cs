@@ -42,5 +42,4 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
 
     public void OnStopChasing() { }
     public void OnKnockedOut() { }
-    public void OnReturn(Vector3 position) { }
 }

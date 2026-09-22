@@ -36,5 +36,4 @@ public class EnemyMovingState : EnemyBaseState, IEnemy
     public void OnChasingPerformed(Vector3 position) { }
     public bool OnTakeDamage() { return true; }
     public void OnKnockedOut() { }
-    public void OnReturn(Vector3 position) { }
 }

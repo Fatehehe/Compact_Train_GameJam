@@ -18,7 +18,6 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
     public override void Exit() { }
     public override void Tick(float deltaTime) { }
 
-    public void OnReturn(Vector3 position) { }
     public void OnChasingPerformed(Vector3 position) { }
     public void OnKnockedOut() { }
     public void OnStopChasing() { }

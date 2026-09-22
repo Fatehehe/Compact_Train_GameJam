@@ -11,6 +11,4 @@ public interface IEnemy
     bool OnTakeDamage();
     void OnKnockedOut();
     void OnTargetReached();
-
-    void OnReturn(Vector3 position);
 }

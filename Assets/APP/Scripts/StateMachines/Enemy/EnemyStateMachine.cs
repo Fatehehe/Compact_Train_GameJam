@@ -27,6 +27,5 @@ public class EnemyStateMachine : StateMachine, IEnemy
     public void OnTargetReached() => (currentState as IEnemy)?.OnTargetReached();
     public void OnStopChasing() => (currentState as IEnemy)?.OnStopChasing();
     public bool OnTakeDamage() => (currentState as IEnemy).OnTakeDamage();
-    public void OnReturn(Vector3 position) => (currentState as IEnemy).OnReturn(position);
     public void OnKnockedOut() => (currentState as IEnemy)?.OnKnockedOut();
 }

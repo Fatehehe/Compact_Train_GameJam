@@ -8,7 +8,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private EnemyManager enemyManager;
     private PlayerManager playerManager;
     private PlayerDetector playerDetector;
-    private LevelDatabase levelDatabase; // Tambahan Database
+    private LevelDatabase levelDatabase;
 
     private int currentLevelIndex = 0;
     private GameObject currentLevelInstance;
@@ -27,8 +27,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     public void Initialize()
     {
         playerDetector.OnFinishReached += HandleFinishReached;
-
-        // Memulai level 0 (pertama) saat game diinisialisasi
         StartLevel(currentLevelIndex);
     }
 
@@ -93,6 +91,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     {
         isGameRunning = false;
         playerManager.StopCharacter();
+        enemyManager.StopSpawning();
         Debug.Log("Waktu Habis! Kamu Kalah.");
         // TODO: Panggil UI Game Over / Logika Restart
     }
@@ -103,6 +102,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
         isGameRunning = false;
         playerManager.StopCharacter();
+        enemyManager.StopSpawning();
         // enemyManager.ClearAllEnemies(); // Uncomment jika musuh ingin langsung dihapus saat finish
 
         Debug.Log("Garis Finish Dicapai! Melanjutkan ke level berikutnya...");
