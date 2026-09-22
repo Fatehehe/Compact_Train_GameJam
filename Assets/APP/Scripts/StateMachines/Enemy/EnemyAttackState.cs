@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyAttackState : EnemyBaseState, IEnemy
 {
-    private readonly int AttackHash = Animator.StringToHash("Attack");
+    private readonly int AttackHash = Animator.StringToHash("Kick");
 
     public bool IsKnockedOut => false;
     public bool IsPushable => false;

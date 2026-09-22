@@ -16,18 +16,9 @@ public class CharacterCheckPointState : CharacterBaseState, IAnimation, IPlayer
     public override void Tick(float deltaTime)
     {
         MoveHorizontal(deltaTime, stateMachine.CurrentLane);
-        MoveForward(deltaTime, 2f);
+        MoveForward(deltaTime, 5f);
 
-        // --- STATE INI MENGECEK KEDUANYA ---
-
-        // Prioritaskan Swipeable dulu (Sesuai urutan if-else)
-        if (stateMachine.EnemyDetector.IsDetectingSwipeable())
-        {
-            // Panggil event Pulled di State Machine (atau langsung Switch State)
-            stateMachine.SwitchState(new CharacterFallState(stateMachine));
-            return; // Wajib return agar logika gerak di bawahnya tidak dieksekusi lagi di frame ini
-        }
-        else if (stateMachine.EnemyDetector.IsDetectingPushable())
+        if (stateMachine.EnemyDetector.IsDetectingPushableEnemy())
         {
             stateMachine.SwitchState(new CharacterPushingState(stateMachine));
             return;

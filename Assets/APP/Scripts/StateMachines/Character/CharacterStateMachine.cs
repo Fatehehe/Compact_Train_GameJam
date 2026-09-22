@@ -5,7 +5,6 @@ using VContainer;
 public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPlayer
 {
     [field: SerializeField] public Animator Animator { get; private set; }
-    [field: SerializeField] public PlayerDetector PlayerDetector { get; private set; }
     [field: SerializeField] public EnemyDetector EnemyDetector { get; private set; }
 
     public int CurrentLane { get; set; } = 0;
@@ -20,6 +19,21 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     private void Start()
     {
         SwitchState(new CharacterIdleState(this));
+    }
+
+    void OnEnable()
+    {
+        EnemyDetector.OnAttacked += HandleAttacked;
+    }
+
+    void OnDisable()
+    {
+        EnemyDetector.OnAttacked -= HandleAttacked;
+    }
+
+    private void HandleAttacked()
+    {
+        SwitchState(new CharacterFallState(this));
     }
 
     public void OnSwipeUp() => (currentState as ISwipe)?.OnSwipeUp();

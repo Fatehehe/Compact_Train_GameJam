@@ -6,14 +6,13 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
 
     public EnemyPushedState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
-    public bool IsKnockedOut => false;
+    public bool IsKnockedOut => true;
     public bool IsPushable => false;
     public bool IsSwipeable => false;
 
     public override void Enter()
     {
         stateMachine.Animator.CrossFadeInFixedTime(FallHash, 0.1f);
-
     }
 
     public override void Exit() { }
@@ -23,7 +22,7 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
     public void OnChasingPerformed(Vector3 position) { }
     public void OnKnockedOut() { }
     public void OnStopChasing() { }
-    public bool OnTakeDamage() => stateMachine.OnTakeDamage();
+    public bool OnTakeDamage() { return true; }
     public void OnTargetReached() { }
 
 }

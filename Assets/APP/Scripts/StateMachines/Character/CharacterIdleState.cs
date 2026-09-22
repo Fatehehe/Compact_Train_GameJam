@@ -14,6 +14,7 @@ public class CharacterIdleState : CharacterBaseState, ITap, IPlayer
 
     public override void Exit() { }
     public override void Tick(float deltaTime) { }
+
     public void OnTap() => stateMachine.SwitchState(new CharacterMovingState(stateMachine));
 
     public bool IsFalling => false;

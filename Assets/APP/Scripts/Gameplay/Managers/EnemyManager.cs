@@ -11,7 +11,7 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     private IEnemy currentEnemy;
 
     private int spawnCounter;
-    private readonly float catchDistanceSqr = 0.5f * 0.5f;
+    private readonly float catchDistanceSqr = 0.8f * 0.8f;
 
     private List<IEnemy> activePushEnemies = new();
 
@@ -25,12 +25,14 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     public void Initialize()
     {
         EnemyEvents.OnAttackCompleted += HandleAttackCompleted;
+        EnemyEvents.OnAttackAnimationCompleted += HandleAttackAnimationCompleted;
         EnemyEvents.OnReturnCompleted += HandleReturnCompleted;
     }
 
     public void Dispose()
     {
         EnemyEvents.OnAttackCompleted -= HandleAttackCompleted;
+        EnemyEvents.OnAttackAnimationCompleted += HandleAttackAnimationCompleted;
         EnemyEvents.OnReturnCompleted -= HandleReturnCompleted;
     }
 
@@ -79,9 +81,14 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
         currentEnemy = null;
     }
 
-    private void HandleAttackCompleted()
+    private void HandleAttackAnimationCompleted()
     {
         currentEnemy?.OnReturn(enemySpawner.LeftSpawnPosition.position);
+    }
+
+    private void HandleAttackCompleted()
+    {
+        // currentEnemy?.OnReturn(enemySpawner.LeftSpawnPosition.position);
     }
 
     public void Tick()

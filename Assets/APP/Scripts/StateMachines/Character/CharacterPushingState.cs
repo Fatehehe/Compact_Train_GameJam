@@ -11,21 +11,12 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer
     {
         stateMachine.Animator.CrossFadeInFixedTime(PushHash, stateMachine.Config.crossFadeDuration);
     }
-
     public override void Exit() { }
-
-    public override void Tick(float deltaTime)
-    {
-        if (stateMachine.EnemyDetector.IsDetectingSwipeable())
-        {
-            stateMachine.SwitchState(new CharacterFallState(stateMachine));
-            return;
-        }
-    }
+    public override void Tick(float deltaTime) { }
 
     public void OnTap()
     {
-        bool isEnemyKilled = stateMachine.EnemyDetector.AttackActiveEnemy();
+        bool isEnemyKilled = stateMachine.EnemyDetector.PushActiveEnemy();
         if (isEnemyKilled)
         {
             stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));
@@ -33,11 +24,8 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer
     }
 
     public void OnSwipeUp() { }
-
     public void OnSwipeRight() { }
-
     public void OnSwipeLeft() { }
-
     public void OnSwipeDown() { }
 
     public bool IsFalling => false;

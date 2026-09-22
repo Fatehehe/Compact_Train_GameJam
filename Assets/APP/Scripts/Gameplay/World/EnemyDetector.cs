@@ -1,22 +1,32 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDetector : MonoBehaviour
 {
-    private readonly List<IEnemy> detectedEnemies = new();
+    private readonly List<IEnemy> detectedPushableEnemies = new();
 
-    private void OnEnable()
+    public event Action OnAttacked;
+
+    private void Start()
     {
-        detectedEnemies.Clear();
+        detectedPushableEnemies.Clear();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out IEnemy enemy))
+        if (other.TryGetComponent(out IEnemy enemy) && !enemy.IsKnockedOut)
         {
-            if (!detectedEnemies.Contains(enemy) && !enemy.IsKnockedOut)
+            if (enemy.IsPushable)
             {
-                detectedEnemies.Add(enemy);
+                if (!detectedPushableEnemies.Contains(enemy))
+                {
+                    detectedPushableEnemies.Add(enemy);
+                }
+            }
+            else if (enemy.IsSwipeable)
+            {
+                OnAttacked?.Invoke();
             }
         }
     }
@@ -25,56 +35,42 @@ public class EnemyDetector : MonoBehaviour
     {
         if (other.TryGetComponent(out IEnemy enemy))
         {
-            if (detectedEnemies.Contains(enemy))
+            if (enemy.IsPushable)
             {
-                detectedEnemies.Remove(enemy);
+                detectedPushableEnemies.Remove(enemy);
             }
         }
     }
 
-    public IEnemy GetLatestActiveEnemy()
+    private IEnemy GetActivePushableEnemy()
     {
-        for (int i = detectedEnemies.Count - 1; i >= 0; i--)
-        {
-            var enemy = detectedEnemies[i];
-            if (enemy == null || enemy.Equals(null) || enemy.IsKnockedOut)
-            {
-                detectedEnemies.RemoveAt(i);
-            }
-        }
+        detectedPushableEnemies.RemoveAll(e => e == null || e.Equals(null) || e.IsKnockedOut);
 
-        if (detectedEnemies.Count > 0)
+        if (detectedPushableEnemies.Count > 0)
         {
-            return detectedEnemies[detectedEnemies.Count - 1];
+            return detectedPushableEnemies[detectedPushableEnemies.Count - 1];
         }
 
         return null;
     }
 
-    public bool IsDetectingSwipeable()
+    public bool IsDetectingPushableEnemy()
     {
-        IEnemy enemy = GetLatestActiveEnemy();
-        return enemy != null && enemy.IsSwipeable;
+        return GetActivePushableEnemy() != null;
     }
 
-    public bool IsDetectingPushable()
+    public bool PushActiveEnemy()
     {
-        IEnemy enemy = GetLatestActiveEnemy();
-        return enemy != null && enemy.IsPushable;
-    }
-
-    public bool AttackActiveEnemy()
-    {
-        IEnemy enemy = GetLatestActiveEnemy();
-        if (enemy != null)
+        IEnemy pushable = GetActivePushableEnemy();
+        if (pushable != null)
         {
-            if (enemy.OnTakeDamage())
+            if (pushable.OnTakeDamage())
             {
-                detectedEnemies.Remove(enemy);
+                if (pushable.IsKnockedOut) detectedPushableEnemies.Remove(pushable);
                 return true;
             }
         }
-
         return false;
     }
+
 }

@@ -12,5 +12,6 @@ public class PlayerEvents
 public static class EnemyEvents
 {
     public static Action OnAttackCompleted;
+    public static Action OnAttackAnimationCompleted;
     public static Action OnReturnCompleted;
 }

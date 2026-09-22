@@ -48,8 +48,6 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
     public void OnSwipeUp() { }
     public void OnSwipeDown() { }
 
-    public bool IsFalling => false;
-    public Transform GetTransform() => stateMachine.GetTransform();
     public void OnCheckPoint()
     {
         stateMachine.CurrentLane = 0;
@@ -60,6 +58,7 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
     {
         stateMachine.SwitchState(new CharacterImpactState(stateMachine, damage));
     }
-
+    public bool IsFalling => false;
+    public Transform GetTransform() => stateMachine.GetTransform();
     public void OnKnockedOut() { }
 }
