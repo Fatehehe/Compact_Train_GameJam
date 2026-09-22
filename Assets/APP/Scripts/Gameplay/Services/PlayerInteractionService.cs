@@ -41,4 +41,6 @@ public class PlayerInteractionService : IInitializable, IDisposable
     }
 
     public Transform GetPlayerTransform() => characterStateMachine.GetTransform();
+
+    public bool GetPlayerFallStatus() => (characterStateMachine as IPlayer).IsFalling;
 }

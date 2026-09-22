@@ -48,6 +48,7 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
     public void OnSwipeUp() { }
     public void OnSwipeDown() { }
 
+    public bool IsFalling => false;
     public Transform GetTransform() => stateMachine.GetTransform();
     public void OnCheckPoint()
     {

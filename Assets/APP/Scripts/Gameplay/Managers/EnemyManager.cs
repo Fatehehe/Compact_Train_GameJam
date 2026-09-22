@@ -31,14 +31,11 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 
     private void HandleReturnCompleted()
     {
-        // Hancurkan objek musuh yang lama agar tidak menumpuk di scene
         if (currentEnemy is MonoBehaviour enemyComponent)
         {
             UnityEngine.Object.Destroy(enemyComponent.gameObject);
         }
 
-        // Null-kan currentEnemy. 
-        // Ini akan membuat isEnemyDead = true di Tick(), sehingga musuh baru akan spawn.
         currentEnemy = null;
     }
 
@@ -49,12 +46,14 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 
     public void Tick()
     {
+        Debug.Log("fall status " + enemyInteractionService.IsSpawnReady);
         if (!enemyInteractionService.IsCheckPointActive) return;
 
         bool isEnemyDead = currentEnemy == null || currentEnemy.Equals(null) || currentEnemy.IsKnockedOut;
 
         if (isEnemyDead)
         {
+            if (enemyInteractionService.IsSpawnReady) return;
             if (spawnCounter > 0)
             {
                 spawnCounter--;

@@ -59,15 +59,14 @@ public class CharacterFallState : CharacterBaseState, ITap, IAnimation, IPlayer
 
     public void OnGettingUpCompleted()
     {
-        // stateMachine.Target.ResetHp();
         stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));
-        stateMachine.isFalling = false;
     }
 
     public void OnFallCompleted() { }
     public void OnStandingUpCompleted() { }
     public void OnStopAnimation() { }
 
+    public bool IsFalling => true;
     public Transform GetTransform() => stateMachine.GetTransform();
     public void OnCheckPoint() { }
     public void OnTakeDamage(float damage) { }

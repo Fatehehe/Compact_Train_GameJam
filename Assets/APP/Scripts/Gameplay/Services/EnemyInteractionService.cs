@@ -36,4 +36,6 @@ public class EnemyInteractionService : IInitializable, IDisposable, ITickable
     {
         IsCheckPointActive = true;
     }
+
+    public bool IsSpawnReady => playerInteractionService.GetPlayerFallStatus();
 }

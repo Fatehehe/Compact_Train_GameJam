@@ -3,19 +3,16 @@ using UnityEngine;
 public class EnemyMovingState : EnemyBaseState, IEnemy
 {
     private readonly int RunHash = Animator.StringToHash("Run");
-    private const float CrossFadeDuration = 0.1f;
 
     public bool IsKnockedOut => false;
-
     public bool IsPushable => false;
-
     public bool IsSwipeable => true;
 
     public EnemyMovingState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        stateMachine.Animator.CrossFadeInFixedTime(RunHash, CrossFadeDuration);
+        stateMachine.Animator.CrossFadeInFixedTime(RunHash, stateMachine.Config.crossFadeDuration);
     }
 
     public override void Tick(float deltaTime)
@@ -37,13 +34,7 @@ public class EnemyMovingState : EnemyBaseState, IEnemy
     }
 
     public void OnChasingPerformed(Vector3 position) { }
-
     public bool OnTakeDamage() { return true; }
-
     public void OnKnockedOut() { }
-
-    public void OnReturn(Vector3 position)
-    {
-
-    }
+    public void OnReturn(Vector3 position) { }
 }

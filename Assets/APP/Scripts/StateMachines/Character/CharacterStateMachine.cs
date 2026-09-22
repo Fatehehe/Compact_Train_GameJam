@@ -8,9 +8,6 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     [field: SerializeField] public PlayerDetector PlayerDetector { get; private set; }
     [field: SerializeField] public EnemyDetector EnemyDetector { get; private set; }
 
-    public bool isCheckPoint = false;
-    public bool isFalling = false;
-
     public int CurrentLane { get; set; } = 0;
     public GameConfigData Config { get; private set; }
 
@@ -38,9 +35,9 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     public void OnStandingUpCompleted() => (currentState as IAnimation)?.OnStandingUpCompleted();
     public void OnStopAnimation() => (currentState as IAnimation)?.OnStopAnimation();
 
+    public bool IsFalling => (currentState as IPlayer).IsFalling;
     public Transform GetTransform() => transform;
     public void OnCheckPoint() => (currentState as IPlayer)?.OnCheckPoint();
     public void OnTakeDamage(float damage) => (currentState as IPlayer)?.OnTakeDamage(damage);
     public void OnKnockedOut() => (currentState as IPlayer)?.OnKnockedOut();
-
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterPushingState : CharacterBaseState, ITap, ISwipe
+public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer
 {
     private readonly int PushHash = Animator.StringToHash("Pushing");
 
@@ -39,4 +39,11 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe
     public void OnSwipeLeft() { }
 
     public void OnSwipeDown() { }
+
+    public bool IsFalling => false;
+    public Transform GetTransform() => stateMachine.GetTransform();
+
+    public void OnCheckPoint() { }
+    public void OnTakeDamage(float damage) { }
+    public void OnKnockedOut() { }
 }

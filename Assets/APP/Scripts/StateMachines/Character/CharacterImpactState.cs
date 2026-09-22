@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterImpactState : CharacterBaseState, IAnimation
+public class CharacterImpactState : CharacterBaseState, IAnimation, IPlayer
 {
     private readonly int ImpactHash = Animator.StringToHash("Fall");
     private readonly int StandingUpHash = Animator.StringToHash("Standing Up");
@@ -22,4 +22,10 @@ public class CharacterImpactState : CharacterBaseState, IAnimation
     public void OnFallBehindCompleted() { }
     public void OnGettingUpCompleted() { }
     public void OnStopAnimation() { }
+
+    public bool IsFalling => false;
+    public Transform GetTransform() => stateMachine.GetTransform();
+    public void OnCheckPoint() { }
+    public void OnTakeDamage(float damage) { }
+    public void OnKnockedOut() { }
 }

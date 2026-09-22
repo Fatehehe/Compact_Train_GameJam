@@ -3,20 +3,16 @@ using UnityEngine;
 public class EnemyIdleState : EnemyBaseState, IEnemy
 {
     private readonly int IdleHash = Animator.StringToHash("Idle");
-    private const float CrossFadeDuration = 0.1f;
     private int hp = 5;
-
     public bool IsKnockedOut => false;
-
     public bool IsPushable => true;
-
     public bool IsSwipeable => false;
 
     public EnemyIdleState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        stateMachine.Animator.CrossFadeInFixedTime(IdleHash, CrossFadeDuration);
+        stateMachine.Animator.CrossFadeInFixedTime(IdleHash, stateMachine.Config.crossFadeDuration);
     }
 
     public override void Tick(float deltaTime) { }
@@ -32,8 +28,6 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
         stateMachine.SwitchState(new EnemyAttackState(stateMachine));
     }
 
-    public void OnStopChasing() { }
-
     public bool OnTakeDamage()
     {
         if (hp > 1)
@@ -46,10 +40,7 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
         return true;
     }
 
+    public void OnStopChasing() { }
     public void OnKnockedOut() { }
-
-    public void OnReturn(Vector3 position)
-    {
-
-    }
+    public void OnReturn(Vector3 position) { }
 }

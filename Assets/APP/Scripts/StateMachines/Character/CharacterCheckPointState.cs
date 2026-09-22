@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterCheckPointState : CharacterBaseState, IAnimation
+public class CharacterCheckPointState : CharacterBaseState, IAnimation, IPlayer
 {
     private readonly int CheckPointHash = Animator.StringToHash("Run");
 
@@ -39,4 +39,11 @@ public class CharacterCheckPointState : CharacterBaseState, IAnimation
     public void OnGettingUpCompleted() { }
     public void OnStandingUpCompleted() { }
     public void OnStopAnimation() => stateMachine.SwitchState(new CharacterIdleState(stateMachine));
+
+    public bool IsFalling => false;
+    public Transform GetTransform() => stateMachine.GetTransform();
+
+    public void OnCheckPoint() { }
+    public void OnTakeDamage(float damage) { }
+    public void OnKnockedOut() { }
 }
