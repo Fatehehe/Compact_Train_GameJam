@@ -16,7 +16,7 @@ public class EnemyReturningState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
-        stateMachine.Animator.CrossFadeInFixedTime(RunHash, stateMachine.Config.crossFadeDuration);
+        stateMachine.Animator.CrossFadeInFixedTime(RunHash, 0.1f);
     }
 
     public override void Tick(float deltaTime)

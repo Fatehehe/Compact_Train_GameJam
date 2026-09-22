@@ -12,7 +12,7 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
-        stateMachine.Animator.CrossFadeInFixedTime(IdleHash, stateMachine.Config.crossFadeDuration);
+        stateMachine.Animator.CrossFadeInFixedTime(IdleHash, 0.1f);
     }
 
     public override void Tick(float deltaTime) { }

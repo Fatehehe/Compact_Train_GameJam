@@ -12,7 +12,7 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
-        stateMachine.Animator.CrossFadeInFixedTime(FallHash, stateMachine.Config.crossFadeDuration);
+        stateMachine.Animator.CrossFadeInFixedTime(FallHash, 0.1f);
 
     }
 

@@ -50,3 +50,4 @@ MonoBehaviour:
   autoInjectGameObjects: []
   soundSystem: {fileID: 4167356189360771819, guid: 74695d3a5b98e7248b70f47f8b104fb1, type: 3}
   gameConfigData: {fileID: 11400000, guid: 606a53d9ef81249b2be67c8b3b7e5fa9, type: 2}
+  levelDatabase: {fileID: 11400000, guid: 2f0fa0aef760e4f3fa182dad3368af77, type: 2}

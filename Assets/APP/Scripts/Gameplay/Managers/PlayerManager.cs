@@ -5,7 +5,6 @@ using VContainer.Unity;
 
 public class PlayerManager : IInitializable, IDisposable
 {
-
     private PlayerInteractionService playerInteractionService;
     private PlayerAnimationService playerAnimationService;
     private PlayerControlService playerControlService;
@@ -29,5 +28,14 @@ public class PlayerManager : IInitializable, IDisposable
     public void StopCharacter()
     {
         playerAnimationService.StopCharacterAnimation();
+        // playerControlService.DisableControl(); // Opsional jika kamu punya sistem matikan input
+    }
+
+    // FUNGSI BARU: Mengatur posisi player di awal level
+    public void SetPlayerPosition(Vector3 startPosition)
+    {
+        // CATATAN: Ganti "CharacterGameObject" dengan properti asli yang menyimpan Transform/GameObject player di dalam servicemu.
+        // Contoh:
+        // playerInteractionService.CharacterTransform.position = startPosition;
     }
 }
