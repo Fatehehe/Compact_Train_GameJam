@@ -8,8 +8,12 @@ public class LevelData : ScriptableObject
 
     [Header("Level Mechanics")]
     public float levelTimer = 60f;
-    public int checkpointEnemyCount = 5;
     public float randomMinTimeSpawn = 0f;
-    public float randomMaxTimeSpawn = 5f;
+    public float randomMaxTimeSpawn = 1.5f;
     public GameObject pushEnemyPrefab;
+
+    [Header("Hit Mechanics (Sweet Spot)")]
+    public float minHitDistance = 1.0f;
+    public float maxHitDistance = 3.0f;
+    public float timePenalty = 2.0f;
 }

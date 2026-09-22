@@ -27,12 +27,28 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     public void Initialize()
     {
         playerDetector.OnFinishReached += HandleFinishReached;
+        GameEvents.OnMissHit += HandleMissHit;
         StartLevel(currentLevelIndex);
     }
 
     public void Dispose()
     {
         playerDetector.OnFinishReached -= HandleFinishReached;
+        GameEvents.OnMissHit -= HandleMissHit;
+    }
+
+    private void HandleMissHit(float penaltyTime)
+    {
+        if (!isGameRunning) return;
+
+        timer -= penaltyTime;
+        Debug.Log($"MISS! Waktu dikurangi {penaltyTime} detik. Sisa waktu: {timer}");
+
+        if (timer <= 0)
+        {
+            timer = 0;
+            HandleGameOver();
+        }
     }
 
     private void StartLevel(int index)

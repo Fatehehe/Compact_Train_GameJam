@@ -34,10 +34,28 @@ public class PlayerControlService : IInitializable, IDisposable
         characterInteractionService.OnTap -= HandleTap;
     }
 
-    private void HandleSwipeUp() => (characterStateMachine as ISwipe)?.OnSwipeUp();
-    private void HandleSwipeDown() => (characterStateMachine as ISwipe)?.OnSwipeDown();
-    private void HandleSwipeLeft() => (characterStateMachine as ISwipe)?.OnSwipeLeft();
-    private void HandleSwipeRight() => (characterStateMachine as ISwipe)?.OnSwipeRight();
+    private void HandleSwipeUp()
+    {
+        (characterStateMachine as ISwipe)?.OnSwipeUp();
+        GameEvents.OnPlayerSwipe?.Invoke("Up");
+    }
 
+    private void HandleSwipeDown()
+    {
+        (characterStateMachine as ISwipe)?.OnSwipeDown();
+        GameEvents.OnPlayerSwipe?.Invoke("Down");
+    }
+
+    private void HandleSwipeLeft()
+    {
+        (characterStateMachine as ISwipe)?.OnSwipeLeft();
+        GameEvents.OnPlayerSwipe?.Invoke("Left");
+    }
+
+    private void HandleSwipeRight()
+    {
+        (characterStateMachine as ISwipe)?.OnSwipeRight();
+        GameEvents.OnPlayerSwipe?.Invoke("Right");
+    }
     private void HandleTap(Vector2 screenPos) => (characterStateMachine as ITap)?.OnTap();
 }

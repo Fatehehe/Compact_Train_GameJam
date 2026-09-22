@@ -7,8 +7,8 @@ public class EnemyAnimationFunctions : MonoBehaviour
         Debug.Log("Attack completed");
     }
 
-    public void AttackAnimationCompleted()
+    public void AnimationCompleted()
     {
-        EnemyEvents.OnAttackAnimationCompleted?.Invoke();
+        EnemyEvents.OnAnimationCompleted?.Invoke();
     }
 }

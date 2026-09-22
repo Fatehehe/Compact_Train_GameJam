@@ -12,6 +12,7 @@ public class EnemyMovingState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
+        stateMachine.Collider.enabled = true;
         stateMachine.Animator.CrossFadeInFixedTime(RunHash, 0.1f);
     }
 
@@ -28,12 +29,7 @@ public class EnemyMovingState : EnemyBaseState, IEnemy
         stateMachine.SwitchState(new EnemyAttackState(stateMachine));
     }
 
-    public void OnStopChasing()
-    {
-        stateMachine.SwitchState(new EnemyIdleState(stateMachine));
-    }
-
     public void OnChasingPerformed(Vector3 position) { }
     public bool OnTakeDamage() { return true; }
-    public void OnKnockedOut() { }
+    public void OnKnockedOut() => stateMachine.SwitchState(new EnemyKnockedOutState(stateMachine));
 }

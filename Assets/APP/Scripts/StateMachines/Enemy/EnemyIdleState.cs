@@ -12,6 +12,7 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
+        stateMachine.Collider.enabled = true;
         stateMachine.Animator.CrossFadeInFixedTime(IdleHash, 0.1f);
     }
 
@@ -40,6 +41,5 @@ public class EnemyIdleState : EnemyBaseState, IEnemy
         return true;
     }
 
-    public void OnStopChasing() { }
     public void OnKnockedOut() { }
 }

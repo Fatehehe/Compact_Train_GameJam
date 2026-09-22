@@ -1351,6 +1351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
   <Animator>k__BackingField: {fileID: 2770496413985172291}
+  <Collider>k__BackingField: {fileID: 3080373155666756673}
   targetPosition: {x: 0, y: 0, z: 0}
   MoveSpeed: 3
 --- !u!65 &3080373155666756673

@@ -12,6 +12,7 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
+        stateMachine.Collider.enabled = false;
         stateMachine.Animator.CrossFadeInFixedTime(FallHash, 0.1f);
     }
 
@@ -20,7 +21,6 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
 
     public void OnChasingPerformed(Vector3 position) { }
     public void OnKnockedOut() { }
-    public void OnStopChasing() { }
     public bool OnTakeDamage() { return true; }
     public void OnTargetReached() { }
 

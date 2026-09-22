@@ -19,17 +19,13 @@ public class EnemyAttackState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
+        stateMachine.Collider.enabled = false;
         int randomIndex = Random.Range(0, attackHashes.Length);
         stateMachine.Animator.CrossFadeInFixedTime(attackHashes[randomIndex], 0.1f);
     }
 
     public override void Tick(float deltaTime) { }
     public override void Exit() { }
-
-    public void OnStopChasing()
-    {
-        stateMachine.SwitchState(new EnemyIdleState(stateMachine));
-    }
 
     public void OnChasingPerformed(Vector3 position) { }
     public bool OnTakeDamage() => true;

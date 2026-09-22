@@ -5,6 +5,7 @@ using VContainer;
 public class EnemyStateMachine : StateMachine, IEnemy
 {
     [field: SerializeField] public Animator Animator { get; private set; }
+    [field: SerializeField] public Collider Collider { get; private set; }
 
     public Vector3 targetPosition = Vector3.zero;
     public float MoveSpeed = 5f;
@@ -25,7 +26,6 @@ public class EnemyStateMachine : StateMachine, IEnemy
     }
 
     public void OnTargetReached() => (currentState as IEnemy)?.OnTargetReached();
-    public void OnStopChasing() => (currentState as IEnemy)?.OnStopChasing();
     public bool OnTakeDamage() => (currentState as IEnemy).OnTakeDamage();
     public void OnKnockedOut() => (currentState as IEnemy)?.OnKnockedOut();
 }

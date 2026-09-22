@@ -8,8 +8,3 @@ public class PlayerEvents
     public Action OnGettingUpCompleted;
     public Action OnStandingUpCompleted;
 }
-
-public static class EnemyEvents
-{
-    public static Action OnAttackAnimationCompleted;
-}
