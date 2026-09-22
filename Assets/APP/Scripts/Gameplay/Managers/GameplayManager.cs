@@ -47,26 +47,21 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
         LevelEnvironmentData envData = levelData.levelEnvironment;
 
-        // 1. Bersihkan level/map sebelumnya
         if (currentLevelInstance != null)
         {
             UnityEngine.Object.Destroy(currentLevelInstance);
         }
 
-        // 2. Munculkan Map/Environment
         currentLevelInstance = UnityEngine.Object.Instantiate(
             envData.environmentPrefab,
             envData.environmentSpawnPosition,
             Quaternion.identity
         );
 
-        // 3. Set Posisi Player ke garis start
         playerManager.SetPlayerPosition(envData.playerStartPosition);
-
-        // 4. Setup Musuh (Push statis & siapkan Chaser)
+        playerManager.ResetAnimation();
         enemyManager.SetupLevel(levelData);
 
-        // 5. Setup Timer & Mulai Game
         timer = levelData.levelTimer;
         isGameRunning = true;
 
@@ -76,8 +71,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     public void Tick()
     {
         if (!isGameRunning) return;
-
-        // Hitung mundur timer
         timer -= Time.deltaTime;
 
         if (timer <= 0)
@@ -90,10 +83,8 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private void HandleGameOver()
     {
         isGameRunning = false;
-        playerManager.StopCharacter();
+        playerManager.StopCharacter(false);
         enemyManager.StopSpawning();
-        Debug.Log("Waktu Habis! Kamu Kalah.");
-        // TODO: Panggil UI Game Over / Logika Restart
     }
 
     private void HandleFinishReached()
@@ -101,12 +92,8 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         if (!isGameRunning) return;
 
         isGameRunning = false;
-        playerManager.StopCharacter();
+        playerManager.StopCharacter(true);
         enemyManager.StopSpawning();
-        // enemyManager.ClearAllEnemies(); // Uncomment jika musuh ingin langsung dihapus saat finish
-
-        Debug.Log("Garis Finish Dicapai! Melanjutkan ke level berikutnya...");
-        NextLevel();
     }
 
     private void NextLevel()

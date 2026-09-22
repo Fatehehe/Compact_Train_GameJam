@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer
+public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer, IAnimation
 {
     private readonly int PushHash = Animator.StringToHash("Pushing");
 
@@ -34,4 +34,11 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer
     public void OnCheckPoint() { }
     public void OnTakeDamage(float damage) { }
     public void OnKnockedOut() { }
+
+    public void OnFallCompleted() { }
+    public void OnFallBehindCompleted() { }
+    public void OnGettingUpCompleted() { }
+    public void OnStandingUpCompleted() { }
+    public void OnLoseAnimation() => stateMachine.SwitchState(new CharacterLoseState(stateMachine));
+    public void OnWinAnimation() => stateMachine.SwitchState(new CharacterWinState(stateMachine));
 }

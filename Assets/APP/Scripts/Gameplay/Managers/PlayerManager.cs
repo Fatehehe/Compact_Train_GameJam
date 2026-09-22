@@ -25,10 +25,21 @@ public class PlayerManager : IInitializable, IDisposable
     {
     }
 
-    public void StopCharacter()
+    public void StopCharacter(bool isWin)
     {
-        playerAnimationService.StopCharacterAnimation();
-        // playerControlService.DisableControl(); // Opsional jika kamu punya sistem matikan input
+        if (isWin)
+        {
+            playerAnimationService.WinCharacterAnimation();
+        }
+        else
+        {
+            playerAnimationService.LoseCharacterAnimation();
+        }
+    }
+
+    public void ResetAnimation()
+    {
+        playerInteractionService.GetCharacterStateMachine.SwitchState(new CharacterIdleState(playerInteractionService.GetCharacterStateMachine));
     }
 
     // FUNGSI BARU: Mengatur posisi player di awal level

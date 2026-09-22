@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
+public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer, IAnimation
 {
     private readonly int MovingBlendTreeHash = Animator.StringToHash("MovingBlendTree");
     private readonly int HorizontalHash = Animator.StringToHash("Horizontal");
@@ -61,4 +61,11 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer
     public bool IsFalling => false;
     public Transform GetTransform() => stateMachine.GetTransform();
     public void OnKnockedOut() { }
+
+    public void OnFallCompleted() { }
+    public void OnFallBehindCompleted() { }
+    public void OnGettingUpCompleted() { }
+    public void OnStandingUpCompleted() { }
+    public void OnLoseAnimation() => stateMachine.SwitchState(new CharacterLoseState(stateMachine));
+    public void OnWinAnimation() => stateMachine.SwitchState(new CharacterWinState(stateMachine));
 }

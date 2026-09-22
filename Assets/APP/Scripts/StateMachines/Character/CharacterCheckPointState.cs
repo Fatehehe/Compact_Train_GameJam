@@ -29,7 +29,8 @@ public class CharacterCheckPointState : CharacterBaseState, IAnimation, IPlayer
     public void OnFallCompleted() { }
     public void OnGettingUpCompleted() { }
     public void OnStandingUpCompleted() { }
-    public void OnStopAnimation() => stateMachine.SwitchState(new CharacterIdleState(stateMachine));
+    public void OnLoseAnimation() => stateMachine.SwitchState(new CharacterLoseState(stateMachine));
+    public void OnWinAnimation() => stateMachine.SwitchState(new CharacterWinState(stateMachine));
 
     public bool IsFalling => false;
     public Transform GetTransform() => stateMachine.GetTransform();

@@ -47,7 +47,9 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     public void OnFallBehindCompleted() => (currentState as IAnimation)?.OnFallBehindCompleted();
     public void OnGettingUpCompleted() => (currentState as IAnimation)?.OnGettingUpCompleted();
     public void OnStandingUpCompleted() => (currentState as IAnimation)?.OnStandingUpCompleted();
-    public void OnStopAnimation() => (currentState as IAnimation)?.OnStopAnimation();
+    public void OnLoseAnimation() => (currentState as IAnimation)?.OnLoseAnimation();
+    public void OnWinAnimation() => (currentState as IAnimation)?.OnWinAnimation();
+
 
     public bool IsFalling => (currentState as IPlayer).IsFalling;
     public Transform GetTransform() => transform;

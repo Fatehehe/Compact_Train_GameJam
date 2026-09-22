@@ -21,7 +21,9 @@ public class CharacterImpactState : CharacterBaseState, IAnimation, IPlayer
 
     public void OnFallBehindCompleted() { }
     public void OnGettingUpCompleted() { }
-    public void OnStopAnimation() { }
+    public void OnLoseAnimation() => stateMachine.SwitchState(new CharacterLoseState(stateMachine));
+    public void OnWinAnimation() => stateMachine.SwitchState(new CharacterWinState(stateMachine));
+
 
     public bool IsFalling => false;
     public Transform GetTransform() => stateMachine.GetTransform();

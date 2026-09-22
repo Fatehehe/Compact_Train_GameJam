@@ -36,6 +36,6 @@ public class PlayerAnimationService : IInitializable, IDisposable
     private void HandleFallCompleted() => (characterStateMachine as IAnimation)?.OnFallCompleted();
     private void HandleGettingUpCompleted() => (characterStateMachine as IAnimation)?.OnGettingUpCompleted();
     private void HandleStandingUpCompleted() => (characterStateMachine as IAnimation)?.OnStandingUpCompleted();
-
-    public void StopCharacterAnimation() => (characterStateMachine as IAnimation)?.OnStopAnimation();
+    public void LoseCharacterAnimation() => (characterStateMachine as IAnimation)?.OnLoseAnimation();
+    public void WinCharacterAnimation() => (characterStateMachine as IAnimation)?.OnWinAnimation();
 }

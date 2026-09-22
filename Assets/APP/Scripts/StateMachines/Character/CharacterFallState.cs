@@ -64,7 +64,9 @@ public class CharacterFallState : CharacterBaseState, ITap, IAnimation, IPlayer
 
     public void OnFallCompleted() { }
     public void OnStandingUpCompleted() { }
-    public void OnStopAnimation() { }
+    public void OnLoseAnimation() => stateMachine.SwitchState(new CharacterLoseState(stateMachine));
+    public void OnWinAnimation() => stateMachine.SwitchState(new CharacterWinState(stateMachine));
+
 
     public bool IsFalling => true;
     public Transform GetTransform() => stateMachine.GetTransform();
