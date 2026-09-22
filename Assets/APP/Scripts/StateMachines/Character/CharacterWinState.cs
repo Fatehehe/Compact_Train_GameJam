@@ -20,4 +20,5 @@ public class CharacterWinState : CharacterBaseState, IPlayer
     public void OnCheckPoint() { }
     public void OnTakeDamage(float damage) { }
     public void OnKnockedOut() { }
+    public void SetPosition(Vector3 pos) => stateMachine.SetPosition(pos);
 }

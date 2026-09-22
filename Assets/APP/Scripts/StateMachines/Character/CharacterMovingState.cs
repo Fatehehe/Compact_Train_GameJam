@@ -61,6 +61,7 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer, I
     public bool IsFalling => false;
     public Transform GetTransform() => stateMachine.GetTransform();
     public void OnKnockedOut() { }
+    public void SetPosition(Vector3 pos) => stateMachine.SetPosition(pos);
 
     public void OnFallCompleted() { }
     public void OnFallBehindCompleted() { }

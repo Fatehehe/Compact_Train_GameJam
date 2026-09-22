@@ -56,4 +56,7 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
     public void OnCheckPoint() => (currentState as IPlayer)?.OnCheckPoint();
     public void OnTakeDamage(float damage) => (currentState as IPlayer)?.OnTakeDamage(damage);
     public void OnKnockedOut() => (currentState as IPlayer)?.OnKnockedOut();
+
+    public void SetPosition(Vector3 pos) => transform.position = pos;
+
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelEnvironment: {fileID: 11400000, guid: 2c474bedb0f144a2db79c02937298c88, type: 2}
-  levelTimer: 5
+  levelTimer: 30
   checkpointEnemyCount: 4
   randomMinTimeSpawn: 0
   randomMaxTimeSpawn: 2

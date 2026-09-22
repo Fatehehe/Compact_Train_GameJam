@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VContainer;
 using VContainer.Unity;
 
@@ -42,11 +43,8 @@ public class PlayerManager : IInitializable, IDisposable
         playerInteractionService.GetCharacterStateMachine.SwitchState(new CharacterIdleState(playerInteractionService.GetCharacterStateMachine));
     }
 
-    // FUNGSI BARU: Mengatur posisi player di awal level
     public void SetPlayerPosition(Vector3 startPosition)
     {
-        // CATATAN: Ganti "CharacterGameObject" dengan properti asli yang menyimpan Transform/GameObject player di dalam servicemu.
-        // Contoh:
-        // playerInteractionService.CharacterTransform.position = startPosition;
+        playerInteractionService.SetPlayerPosition(startPosition);
     }
 }

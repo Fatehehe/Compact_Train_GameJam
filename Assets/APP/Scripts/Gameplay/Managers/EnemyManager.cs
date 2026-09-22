@@ -15,7 +15,6 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 
     private List<IEnemy> activePushEnemies = new();
 
-    // Variabel baru untuk delay spawn
     private LevelData currentLevelData;
     private bool isWaitingToSpawn = false;
     private float spawnDelayTimer = 0f;

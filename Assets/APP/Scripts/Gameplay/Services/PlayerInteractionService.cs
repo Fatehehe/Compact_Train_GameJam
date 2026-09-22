@@ -45,4 +45,5 @@ public class PlayerInteractionService : IInitializable, IDisposable
     public bool GetPlayerFallStatus() => (characterStateMachine as IPlayer).IsFalling;
 
     public CharacterStateMachine GetCharacterStateMachine => characterStateMachine;
+    public void SetPlayerPosition(Vector3 pos) => (characterStateMachine as IPlayer).SetPosition(pos);
 }
