@@ -8,6 +8,8 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 {
     private readonly EnemyInteractionService enemyInteractionService;
     private readonly PlayerInteractionService playerInteractionService;
+    private readonly HapticManager hapticManager;
+
     private readonly EnemySpawner enemySpawner;
     private IEnemy currentEnemy;
 
@@ -23,11 +25,12 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     private readonly float catchDistanceSqr = 0.4f * 0.4f;
 
     [Inject]
-    public EnemyManager(PlayerInteractionService playerInteractionService, EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner)
+    public EnemyManager(PlayerInteractionService playerInteractionService, EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner, HapticManager hapticManager)
     {
         this.playerInteractionService = playerInteractionService;
         this.enemyInteractionService = enemyInteractionService;
         this.enemySpawner = enemySpawner;
+        this.hapticManager = hapticManager;
     }
 
     public void Initialize()
@@ -89,6 +92,7 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
                 Debug.Log("NICE HIT! Musuh dikalahkan.");
 
                 // LANGSUNG HIDE UI saat musuh berhasil dipukul
+                hapticManager.Heavy();
                 GameEvents.OnEnemyClear?.Invoke();
             }
         }

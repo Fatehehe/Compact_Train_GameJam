@@ -21,6 +21,8 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer, 
         {
             stateMachine.SwitchState(new CharacterCheckPointState(stateMachine));
         }
+
+        stateMachine.HapticManager.Medium();
     }
 
     public void OnSwipeUp() { }

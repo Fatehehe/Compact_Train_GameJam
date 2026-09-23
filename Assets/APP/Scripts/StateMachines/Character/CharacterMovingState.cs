@@ -29,6 +29,8 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer, I
 
     public void OnTap()
     {
+        stateMachine.HapticManager.Light();
+
         targetVertical = Mathf.Clamp(
             targetVertical + stateMachine.Config.verticalStep
             ,
@@ -58,6 +60,7 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer, I
 
     public void OnTakeDamage(float damage)
     {
+        stateMachine.HapticManager.Heavy();
         stateMachine.SwitchState(new CharacterImpactState(stateMachine, damage));
     }
 

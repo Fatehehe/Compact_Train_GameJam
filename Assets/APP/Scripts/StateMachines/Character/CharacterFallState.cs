@@ -23,7 +23,7 @@ public class CharacterFallState : CharacterBaseState, ITap, IAnimation, IPlayer
         knockbackSpeed = 3f;
         isFallCompleted = false;
         isTapCompleted = false;
-
+        stateMachine.HapticManager.Heavy();
         stateMachine.Animator.CrossFadeInFixedTime(FallHash, stateMachine.Config.crossFadeDuration, 0, 0f);
     }
 

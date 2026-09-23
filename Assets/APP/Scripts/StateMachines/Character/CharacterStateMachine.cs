@@ -9,11 +9,13 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
 
     public int CurrentLane { get; set; } = 0;
     public GameConfigData Config { get; private set; }
+    public HapticManager HapticManager { get; private set; }
 
     [Inject]
-    public void Construct(GameConfigData config)
+    public void Construct(GameConfigData config, HapticManager hapticManager)
     {
         this.Config = config;
+        this.HapticManager = hapticManager;
     }
 
     private void Start()

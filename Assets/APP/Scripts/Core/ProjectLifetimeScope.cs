@@ -20,6 +20,6 @@ public class ProjectLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<ProjectAudioService>(Lifetime.Singleton).AsSelf();
 
         builder.RegisterEntryPoint<PlayerInputSystem>(Lifetime.Singleton).AsSelf();
-        // builder.RegisterEntryPoint<InputSystemService>(Lifetime.Singleton).AsSelf();
+        builder.RegisterEntryPoint<HapticManager>(Lifetime.Singleton).AsSelf();
     }
 }

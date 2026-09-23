@@ -9,6 +9,7 @@ public class CharacterImpactState : CharacterBaseState, IAnimation, IPlayer
 
     public override void Enter()
     {
+        stateMachine.HapticManager.Heavy();
         stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, stateMachine.Config.crossFadeDuration);
     }
 
