@@ -15,6 +15,9 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private float timer;
     private bool isGameRunning = false;
 
+    public event Action OnGameEnded;
+    public event Action OnGameStarted;
+
     [Inject]
     public void Construct(PlayerManager playerManager, EnemyManager enemyManager, PlayerDetector playerDetector, LevelDatabase levelDatabase)
     {
@@ -28,13 +31,14 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     {
         playerDetector.OnFinishReached += HandleFinishReached;
         GameEvents.OnMissHit += HandleMissHit;
-        StartLevel(currentLevelIndex);
+        GameEvents.OnPlay += Play;
     }
 
     public void Dispose()
     {
         playerDetector.OnFinishReached -= HandleFinishReached;
         GameEvents.OnMissHit -= HandleMissHit;
+        GameEvents.OnPlay -= Play;
     }
 
     private void HandleMissHit(float penaltyTime)
@@ -42,6 +46,10 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         if (!isGameRunning) return;
 
         timer -= penaltyTime;
+
+        // Kirim update seketika setelah kena penalti waktu
+        GameEvents.OnTimerUpdated?.Invoke(timer);
+
         Debug.Log($"MISS! Waktu dikurangi {penaltyTime} detik. Sisa waktu: {timer}");
 
         if (timer <= 0)
@@ -75,19 +83,23 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         );
 
         playerManager.SetPlayerPosition(envData.playerStartPosition);
-        playerManager.ResetAnimation();
+        playerManager.ResetPlayer();
         enemyManager.SetupLevel(levelData);
 
         timer = levelData.levelTimer;
-        isGameRunning = true;
+        GameEvents.OnTimerUpdated?.Invoke(timer);
 
         Debug.Log($"Level {index + 1} Dimulai! Waktu: {timer} detik");
+        OnGameStarted.Invoke();
     }
 
     public void Tick()
     {
         if (!isGameRunning) return;
         timer -= Time.deltaTime;
+
+        // KIRIM WAKTU TERUS MENERUS KE UI SETIAP FRAME
+        GameEvents.OnTimerUpdated?.Invoke(timer);
 
         if (timer <= 0)
         {
@@ -99,6 +111,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private void HandleGameOver()
     {
         isGameRunning = false;
+        OnGameEnded.Invoke();
         playerManager.StopCharacter(false);
         enemyManager.StopSpawning();
     }
@@ -108,19 +121,30 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         if (!isGameRunning) return;
 
         isGameRunning = false;
+        OnGameEnded.Invoke();
         playerManager.StopCharacter(true);
         enemyManager.StopSpawning();
     }
 
-    private void NextLevel()
+    public void NextLevel()
     {
         currentLevelIndex++;
         StartLevel(currentLevelIndex);
     }
 
-    private void RestartGame()
+    public void StartGame()
     {
         currentLevelIndex = 0;
         StartLevel(0);
+    }
+
+    public void RestartGame()
+    {
+        StartLevel(currentLevelIndex);
+    }
+
+    public void Play()
+    {
+        isGameRunning = true;
     }
 }

@@ -35,6 +35,12 @@ public class EnemyInteractionService : IInitializable, IDisposable, ITickable
     private void HandleCharacterCheckPoint()
     {
         IsCheckPointActive = true;
+        GameEvents.OnCheckpointStateChanged?.Invoke(true);
+    }
+
+    public void ResetStatus()
+    {
+        IsCheckPointActive = false;
     }
 
     public bool IsSpawnReady => playerInteractionService.GetPlayerFallStatus();

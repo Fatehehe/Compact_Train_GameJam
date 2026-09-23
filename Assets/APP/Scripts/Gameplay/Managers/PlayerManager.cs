@@ -36,7 +36,7 @@ public class PlayerManager : IInitializable, IDisposable
         }
     }
 
-    public void ResetAnimation()
+    public void ResetPlayer()
     {
         playerInteractionService.GetCharacterStateMachine.SwitchState(new CharacterIdleState(playerInteractionService.GetCharacterStateMachine));
     }

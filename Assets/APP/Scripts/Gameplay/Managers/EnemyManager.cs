@@ -41,6 +41,13 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     public void SetupLevel(LevelData levelData)
     {
         ClearAllEnemies();
+
+        // 1. Reset status checkpoint agar musuh nunggu player lari dulu
+        enemyInteractionService.ResetStatus();
+
+        // 2. Beri tahu UI bahwa kita sedang tidak di checkpoint (Nyalakan tulisan TAP TAP)
+        GameEvents.OnCheckpointStateChanged?.Invoke(false);
+
         currentLevelData = levelData;
         isWaitingToSpawn = false;
         canSpawn = true;
@@ -114,13 +121,41 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
         }
 
         if (currentEnemy.IsKnockedOut) return;
+        // --- DI DALAM FUNGSI Tick() ---
+
         if (currentEnemy is MonoBehaviour enemyComp)
         {
-            float distanceSqr = (enemyInteractionService.CharacterPosition - enemyComp.transform.position).sqrMagnitude;
+            float distance = Vector3.Distance(enemyInteractionService.CharacterPosition, enemyComp.transform.position);
 
+            // 1. Tentukan arah musuh relatif terhadap player
+            Vector3 dirToEnemy = (enemyComp.transform.position - enemyInteractionService.CharacterPosition).normalized;
+            string targetDir = "None";
+            if (dirToEnemy.x > 0.3f) targetDir = "Right";
+            else if (dirToEnemy.x < -0.3f) targetDir = "Left";
+            else if (dirToEnemy.z < -0.3f) targetDir = "Down";
+
+            // 2. Hitung Progress Fill (0 sampai 1)
+            // Asumsi musuh mulai terdeteksi (mulai ngisi) di jarak 10 unit
+            float startTrackDistance = 10f;
+
+            // InverseLerp mengubah jarak menjadi nilai 0-1.
+            // Saat distance == startTrackDistance nilainya 0. 
+            // Saat distance == maxHitDistance nilainya 1.
+            float progress = Mathf.InverseLerp(startTrackDistance, currentLevelData.maxHitDistance, distance);
+
+            // 3. Status Sweet Spot
+            bool inSweetSpot = distance >= currentLevelData.minHitDistance && distance <= currentLevelData.maxHitDistance;
+            bool tooClose = distance < currentLevelData.minHitDistance;
+
+            // 4. Kirim Data ke UI
+            GameEvents.OnEnemyApproachUpdate?.Invoke(targetDir, progress, inSweetSpot, tooClose);
+
+            // 5. Logika bergerak / nabrak
+            float distanceSqr = distance * distance;
             if (distanceSqr <= catchDistanceSqr)
             {
                 currentEnemy.OnTargetReached();
+                GameEvents.OnEnemyClear?.Invoke(); // Reset indikator kalo musuh nabrak
             }
             else
             {

@@ -9,9 +9,12 @@ public class GameplayLifetimeScope : LifetimeScope
     [SerializeField] private PlayerAnimationFunctions playerAnimationFunctions;
     [SerializeField] private PlayerDetector playerDetector;
     [SerializeField] private EnemySpawner enemySpawner;
+    [SerializeField] private GameplayUIManager gameplayUIManager;
 
     protected override void Configure(IContainerBuilder builder)
     {
+        builder.RegisterComponent(gameplayUIManager);
+
         builder.RegisterComponent(characterStateMachine);
         builder.RegisterComponent(playerAnimationFunctions);
         builder.RegisterComponent(playerDetector);
