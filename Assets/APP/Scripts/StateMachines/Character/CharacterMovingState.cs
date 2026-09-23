@@ -13,6 +13,8 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer, I
     public override void Enter()
     {
         targetVertical = stateMachine.Config.minVerticalBlend;
+        stateMachine.Animator.SetFloat(VerticalHash, targetVertical);
+        stateMachine.Animator.SetFloat(HorizontalHash, 0f);
         stateMachine.Animator.CrossFadeInFixedTime(MovingBlendTreeHash, stateMachine.Config.crossFadeDuration);
     }
 
@@ -58,6 +60,7 @@ public class CharacterMovingState : CharacterBaseState, ITap, ISwipe, IPlayer, I
     {
         stateMachine.SwitchState(new CharacterImpactState(stateMachine, damage));
     }
+
     public bool IsFalling => false;
     public Transform GetTransform() => stateMachine.GetTransform();
     public void OnKnockedOut() { }

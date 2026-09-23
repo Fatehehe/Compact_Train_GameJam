@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: LevelDatabase
   m_EditorClassIdentifier: Assembly-CSharp::LevelDatabase
   levels:
+  - {fileID: 11400000, guid: 07ae4fc42553f43429adcc72ffe379f0, type: 2}
   - {fileID: 11400000, guid: ac2047f3d4bdc49beb11afe3706dec3c, type: 2}

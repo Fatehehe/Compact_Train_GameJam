@@ -14,15 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameConfigData
   SwipeMinDistance: 50
   TapMaxDuration: 0.2
-  LongPressMinDuration: 0.5
   characterMinimumSpeed: 0.1
-  characterMaximumSpeed: 20
+  characterMaximumSpeed: 40
   characterLaneWidth: 1.8
   characterLaneSwitchSpeed: 5
   maxLaneIndex: 1
   minVerticalBlend: 0.1
   maxVerticalBlend: 1
-  verticalStep: 0.25
+  verticalStep: 0.1
   animatorDampTime: 0.1
   crossFadeDuration: 0.1
   scrollSensitivity: 10

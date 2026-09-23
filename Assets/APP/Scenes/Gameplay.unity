@@ -1974,6 +1974,7 @@ MonoBehaviour:
   buttonRestart: {fileID: 1496786216}
   buttonNext: {fileID: 21720276}
   buttonHome: {fileID: 350529660}
+  resultText: {fileID: 2137109442}
 --- !u!1 &697935103
 GameObject:
   m_ObjectHideFlags: 0
@@ -6546,11 +6547,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 58034630825171620, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
       propertyPath: m_Size.x
-      value: 1.2
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 58034630825171620, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
       propertyPath: m_Size.z
-      value: 1.2
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 972880175669613608, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
       propertyPath: m_Name
@@ -6597,7 +6598,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5232838585527537699, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41cffc0b6d3f24dee9aa7f4c13050ea7, type: 3}

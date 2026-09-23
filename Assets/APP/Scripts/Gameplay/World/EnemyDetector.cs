@@ -6,7 +6,7 @@ public class EnemyDetector : MonoBehaviour
 {
     private readonly List<IEnemy> detectedPushableEnemies = new();
 
-    public event Action OnAttacked;
+    // public event Action OnAttacked;
 
     private void Start()
     {
@@ -24,10 +24,10 @@ public class EnemyDetector : MonoBehaviour
                     detectedPushableEnemies.Add(enemy);
                 }
             }
-            else if (enemy.IsSwipeable)
-            {
-                OnAttacked?.Invoke();
-            }
+            // else if (enemy.IsSwipeable)
+            // {
+            //     OnAttacked?.Invoke();
+            // }
         }
     }
 
@@ -48,7 +48,9 @@ public class EnemyDetector : MonoBehaviour
 
         if (detectedPushableEnemies.Count > 0)
         {
-            return detectedPushableEnemies[detectedPushableEnemies.Count - 1];
+            IEnemy enemy = detectedPushableEnemies[detectedPushableEnemies.Count - 1];
+            if (!enemy.IsKnockedOut) return enemy;
+            else return null;
         }
 
         return null;

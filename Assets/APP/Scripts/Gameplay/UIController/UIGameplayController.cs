@@ -5,7 +5,7 @@ using TMPro;
 public class UIGameplayController : BaseMenuController
 {
     [Header("Timer UI")]
-    [SerializeField] private TextMeshProUGUI timerText; // Referensi teks timer
+    [SerializeField] private TextMeshProUGUI timerText;
 
     [Header("Tap Tap UI")]
     [SerializeField] private GameObject tapContainer;
@@ -30,7 +30,7 @@ public class UIGameplayController : BaseMenuController
         GameEvents.OnCheckpointStateChanged += HandleCheckpointState;
         GameEvents.OnEnemyApproachUpdate += HandleEnemyApproach;
         GameEvents.OnEnemyClear += ResetAllIndicators;
-        GameEvents.OnTimerUpdated += UpdateTimerText; // Dengarkan update waktu
+        GameEvents.OnTimerUpdated += UpdateTimerText;
 
         ResetAllIndicators();
     }
@@ -56,15 +56,12 @@ public class UIGameplayController : BaseMenuController
         }
     }
 
-    // FUNGSI BARU: Mengubah Teks Timer
     private void UpdateTimerText(float timeRemaining)
     {
         if (!IsActive || timerText == null) return;
 
-        // Membulatkan waktu ke atas agar rapi, misalnya: 59, 58, 57...
         timerText.text = Mathf.CeilToInt(timeRemaining).ToString() + "s";
 
-        // Opsional: Bikin merah dan bergetar kalau waktu kurang dari 10 detik!
         if (timeRemaining <= 10f)
             timerText.color = Color.red;
         else
@@ -84,7 +81,11 @@ public class UIGameplayController : BaseMenuController
     {
         if (!IsActive) return;
 
+        // Reset semua dulu agar hanya satu arah yang aktif
         ResetAllIndicators();
+
+        // Pengecekan safety, kalau sudah miss langsung batalkan proses gambar
+        if (isTooClose) return;
 
         Image activeIndicator = null;
         if (direction == "Left") activeIndicator = leftIndicator;
@@ -94,14 +95,11 @@ public class UIGameplayController : BaseMenuController
         if (activeIndicator != null)
         {
             activeIndicator.gameObject.SetActive(true);
+
+            // Set value fill image (0 sampai 1)
             activeIndicator.fillAmount = progress;
 
-            if (isTooClose)
-            {
-                activeIndicator.color = missedColor;
-                activeIndicator.transform.localScale = Vector3.one;
-            }
-            else if (isSweetSpot)
+            if (isSweetSpot)
             {
                 activeIndicator.color = sweetSpotColor;
                 float pulse = 1f + Mathf.PingPong(Time.time * 15f, 0.2f);

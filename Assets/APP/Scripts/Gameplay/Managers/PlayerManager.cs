@@ -45,4 +45,5 @@ public class PlayerManager : IInitializable, IDisposable
     {
         playerInteractionService.SetPlayerPosition(startPosition);
     }
+
 }

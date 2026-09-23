@@ -7,6 +7,7 @@ using VContainer.Unity;
 public class EnemyManager : IInitializable, IDisposable, ITickable
 {
     private readonly EnemyInteractionService enemyInteractionService;
+    private readonly PlayerInteractionService playerInteractionService;
     private readonly EnemySpawner enemySpawner;
     private IEnemy currentEnemy;
 
@@ -17,17 +18,21 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     private float spawnDelayTimer = 0f;
 
     private bool canSpawn = true;
-    private readonly float catchDistanceSqr = 0.8f * 0.8f;
+
+    // Pastikan catch distance selalu lebih kecil dari minHitDistance agar musuh tidak nabrak sebelum sweet spot habis
+    private readonly float catchDistanceSqr = 0.4f * 0.4f;
 
     [Inject]
-    public EnemyManager(EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner)
+    public EnemyManager(PlayerInteractionService playerInteractionService, EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner)
     {
+        this.playerInteractionService = playerInteractionService;
         this.enemyInteractionService = enemyInteractionService;
         this.enemySpawner = enemySpawner;
     }
 
     public void Initialize()
     {
+        // PASTIKAN pakai parameter GameObject di script EnemyEvents
         EnemyEvents.OnAnimationCompleted += HandleAnimationCompleted;
         GameEvents.OnPlayerSwipe += HandlePlayerAttackCheck;
     }
@@ -41,11 +46,7 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     public void SetupLevel(LevelData levelData)
     {
         ClearAllEnemies();
-
-        // 1. Reset status checkpoint agar musuh nunggu player lari dulu
         enemyInteractionService.ResetStatus();
-
-        // 2. Beri tahu UI bahwa kita sedang tidak di checkpoint (Nyalakan tulisan TAP TAP)
         GameEvents.OnCheckpointStateChanged?.Invoke(false);
 
         currentLevelData = levelData;
@@ -86,6 +87,9 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
                 currentEnemy.OnKnockedOut();
                 isMiss = false;
                 Debug.Log("NICE HIT! Musuh dikalahkan.");
+
+                // LANGSUNG HIDE UI saat musuh berhasil dipukul
+                GameEvents.OnEnemyClear?.Invoke();
             }
         }
 
@@ -121,41 +125,44 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
         }
 
         if (currentEnemy.IsKnockedOut) return;
-        // --- DI DALAM FUNGSI Tick() ---
 
         if (currentEnemy is MonoBehaviour enemyComp)
         {
             float distance = Vector3.Distance(enemyInteractionService.CharacterPosition, enemyComp.transform.position);
 
-            // 1. Tentukan arah musuh relatif terhadap player
             Vector3 dirToEnemy = (enemyComp.transform.position - enemyInteractionService.CharacterPosition).normalized;
             string targetDir = "None";
             if (dirToEnemy.x > 0.3f) targetDir = "Right";
             else if (dirToEnemy.x < -0.3f) targetDir = "Left";
             else if (dirToEnemy.z < -0.3f) targetDir = "Down";
 
-            // 2. Hitung Progress Fill (0 sampai 1)
-            // Asumsi musuh mulai terdeteksi (mulai ngisi) di jarak 10 unit
             float startTrackDistance = 10f;
 
-            // InverseLerp mengubah jarak menjadi nilai 0-1.
-            // Saat distance == startTrackDistance nilainya 0. 
-            // Saat distance == maxHitDistance nilainya 1.
-            float progress = Mathf.InverseLerp(startTrackDistance, currentLevelData.maxHitDistance, distance);
+            // Jika musuh masih di luar radar, ATAU musuh sudah kelewat batas sweet spot (terlalu dekat)
+            if (distance > startTrackDistance || distance < currentLevelData.minHitDistance)
+            {
+                // Sembunyikan UI
+                GameEvents.OnEnemyClear?.Invoke();
+            }
+            else
+            {
+                // Hitung progres Fill Bar (dari 0 ke 1)
+                float progress = Mathf.InverseLerp(startTrackDistance, currentLevelData.maxHitDistance, distance);
+                bool inSweetSpot = distance <= currentLevelData.maxHitDistance;
 
-            // 3. Status Sweet Spot
-            bool inSweetSpot = distance >= currentLevelData.minHitDistance && distance <= currentLevelData.maxHitDistance;
-            bool tooClose = distance < currentLevelData.minHitDistance;
+                // Jika sudah masuk sweet spot, pastikan bar-nya penuh 100%
+                if (inSweetSpot) progress = 1f;
 
-            // 4. Kirim Data ke UI
-            GameEvents.OnEnemyApproachUpdate?.Invoke(targetDir, progress, inSweetSpot, tooClose);
+                GameEvents.OnEnemyApproachUpdate?.Invoke(targetDir, progress, inSweetSpot, false);
+            }
 
-            // 5. Logika bergerak / nabrak
+            // Logika Tabrakan (Jarak ini harus diset lebih kecil dari minHitDistance di LevelData)
             float distanceSqr = distance * distance;
             if (distanceSqr <= catchDistanceSqr)
             {
                 currentEnemy.OnTargetReached();
-                GameEvents.OnEnemyClear?.Invoke(); // Reset indikator kalo musuh nabrak
+                playerInteractionService.GetCharacterStateMachine.OnKnockedOut();
+                GameEvents.OnEnemyClear?.Invoke(); // Pastikan indikator hilang jika menabrak
             }
             else
             {
@@ -197,13 +204,16 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     public void ClearAllEnemies()
     {
         if (currentEnemy is MonoBehaviour enemyComponent)
+        {
             UnityEngine.Object.Destroy(enemyComponent.gameObject);
+        }
 
         currentEnemy = null;
 
         foreach (IEnemy obj in activePushEnemies)
-            if (obj is Component gameobj)
-                UnityEngine.Object.Destroy(gameobj.gameObject);
+        {
+            if (obj is Component gameobj) UnityEngine.Object.Destroy(gameobj.gameObject);
+        }
 
         activePushEnemies.Clear();
     }

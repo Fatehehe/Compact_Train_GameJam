@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyPushedState : EnemyBaseState, IEnemy
 {
-    private readonly int FallHash = Animator.StringToHash("Fall");
+    private readonly int FallHash = Animator.StringToHash("Pushed");
 
     public EnemyPushedState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
@@ -12,7 +12,6 @@ public class EnemyPushedState : EnemyBaseState, IEnemy
 
     public override void Enter()
     {
-        stateMachine.Collider.enabled = false;
         stateMachine.Animator.CrossFadeInFixedTime(FallHash, 0.1f);
     }
 

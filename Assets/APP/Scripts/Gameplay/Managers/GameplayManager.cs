@@ -13,9 +13,11 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private int currentLevelIndex = 0;
     private GameObject currentLevelInstance;
     private float timer;
+
+    public bool IsGameRunning => isGameRunning;
     private bool isGameRunning = false;
 
-    public event Action OnGameEnded;
+    public event Action<bool> OnGameEnded;
     public event Action OnGameStarted;
 
     [Inject]
@@ -46,8 +48,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         if (!isGameRunning) return;
 
         timer -= penaltyTime;
-
-        // Kirim update seketika setelah kena penalti waktu
         GameEvents.OnTimerUpdated?.Invoke(timer);
 
         Debug.Log($"MISS! Waktu dikurangi {penaltyTime} detik. Sisa waktu: {timer}");
@@ -98,7 +98,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         if (!isGameRunning) return;
         timer -= Time.deltaTime;
 
-        // KIRIM WAKTU TERUS MENERUS KE UI SETIAP FRAME
         GameEvents.OnTimerUpdated?.Invoke(timer);
 
         if (timer <= 0)
@@ -111,7 +110,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private void HandleGameOver()
     {
         isGameRunning = false;
-        OnGameEnded.Invoke();
+        OnGameEnded.Invoke(false);
         playerManager.StopCharacter(false);
         enemyManager.StopSpawning();
     }
@@ -121,7 +120,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         if (!isGameRunning) return;
 
         isGameRunning = false;
-        OnGameEnded.Invoke();
+        OnGameEnded.Invoke(true);
         playerManager.StopCharacter(true);
         enemyManager.StopSpawning();
     }

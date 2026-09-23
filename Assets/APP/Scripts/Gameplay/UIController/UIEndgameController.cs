@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -8,6 +9,7 @@ public class UIEndgameController : BaseMenuController
     [SerializeField] private Button buttonRestart;
     [SerializeField] private Button buttonNext;
     [SerializeField] private Button buttonHome;
+    [SerializeField] private TextMeshProUGUI resultText;
     public event Action OnRestartButtonPressed;
     public event Action OnNextButtonPressed;
     public event Action OnHomeButtonPressed;
@@ -44,4 +46,9 @@ public class UIEndgameController : BaseMenuController
         OnHomeButtonPressed.Invoke();
     }
 
+    public void SetResultText(bool isWinning)
+    {
+        string result = isWinning ? "Win" : "Lose";
+        resultText.SetText(result);
+    }
 }
