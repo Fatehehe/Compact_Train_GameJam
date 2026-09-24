@@ -9,21 +9,22 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
     private readonly EnemyInteractionService enemyInteractionService;
     private readonly PlayerInteractionService playerInteractionService;
     private readonly HapticManager hapticManager;
-    private readonly EnemySpawner enemySpawner;
+
     private IEnemy currentEnemy;
     private readonly List<IEnemy> activePushEnemies = new();
+
     private LevelData currentLevelData;
     private bool isWaitingToSpawn = false;
     private float spawnDelayTimer = 0f;
     private bool canSpawn = true;
     private readonly float catchDistanceSqr = 0.4f * 0.4f;
 
+    // [DIUBAH] EnemySpawner dihapus dari Inject
     [Inject]
-    public EnemyManager(PlayerInteractionService playerInteractionService, EnemyInteractionService enemyInteractionService, EnemySpawner enemySpawner, HapticManager hapticManager)
+    public EnemyManager(PlayerInteractionService playerInteractionService, EnemyInteractionService enemyInteractionService, HapticManager hapticManager)
     {
         this.playerInteractionService = playerInteractionService;
         this.enemyInteractionService = enemyInteractionService;
-        this.enemySpawner = enemySpawner;
         this.hapticManager = hapticManager;
     }
 
@@ -82,13 +83,12 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
                 currentEnemy.OnKnockedOut();
                 isMiss = false;
                 Debug.Log("NICE HIT! Musuh dikalahkan.");
-
                 hapticManager.Heavy();
-                // [FIXED] Dihapus GameEvents.OnEnemyClear; agar UI tidak hilang duluan
             }
         }
 
         if (!canSpawn) return;
+
         if (isMiss)
         {
             GameEvents.OnComboMiss?.Invoke();
@@ -167,11 +167,23 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
 
     private void SpawnAtRandomPosition()
     {
-        Transform[] spawnPoints = new Transform[] { enemySpawner.RightSpawnPosition, enemySpawner.LeftSpawnPosition, enemySpawner.BehindSpawnPosition };
-        int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Length);
-        Transform selectedSpawnPoint = spawnPoints[randomIndex];
+        // [DIUBAH] Ambil posisi dan prefab dari LevelEnvironmentData
+        if (currentLevelData == null || currentLevelData.levelEnvironment == null) return;
 
-        if (selectedSpawnPoint != null) Spawn(enemySpawner.Prefab, selectedSpawnPoint.position);
+        Vector3[] spawnPoints = currentLevelData.levelEnvironment.spawnEnemyPositions;
+        GameObject prefabToSpawn = currentLevelData.levelEnvironment.spawnEnemyPrefab;
+
+        // Validasi agar tidak error jika data lupa diisi
+        if (spawnPoints == null || spawnPoints.Length == 0 || prefabToSpawn == null)
+        {
+            Debug.LogWarning("Spawn Enemy Data (Positions atau Prefab) di LevelEnvironmentData kosong!");
+            return;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Length);
+        Vector3 selectedSpawnPosition = spawnPoints[randomIndex];
+
+        Spawn(prefabToSpawn, selectedSpawnPosition);
     }
 
     private void Spawn(GameObject prefab, Vector3 position)

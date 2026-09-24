@@ -14,4 +14,10 @@ public class LevelEnvironmentData : ScriptableObject
 
     [Header("Enemy Positions")]
     public Vector3[] pushEnemyPositions;
+
+
+    [Header("Spawn Enemy Positions")]
+    public Vector3[] spawnEnemyPositions;
+    public GameObject spawnEnemyPrefab;
+
 }
