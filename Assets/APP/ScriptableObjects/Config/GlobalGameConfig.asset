@@ -16,7 +16,7 @@ MonoBehaviour:
   TapMaxDuration: 0.2
   characterMinimumSpeed: 0.1
   characterMaximumSpeed: 40
-  characterLaneWidth: 1.8
+  characterLaneWidth: 1.45
   characterLaneSwitchSpeed: 5
   maxLaneIndex: 1
   minVerticalBlend: 0.1
