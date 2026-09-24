@@ -14,4 +14,6 @@ public static class GameEvents
 
     // Tambahkan baris ini di dalam class GameEvents
     public static Action<float> OnTimerUpdated;
+    public static Action OnComboHit;
+    public static Action OnComboMiss;
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class UIGameplayController : BaseMenuController
@@ -13,15 +12,13 @@ public class UIGameplayController : BaseMenuController
     [SerializeField] private float pulseSpeed = 10f;
     private bool isTappingPhase = false;
 
-    [Header("Swipe Indicators (Fill Images)")]
-    [SerializeField] private Image leftIndicator;
-    [SerializeField] private Image rightIndicator;
-    [SerializeField] private Image bottomIndicator;
+    [Header("Swipe Indicators (IndicatorUI)")]
+    [SerializeField] private IndicatorUI leftIndicator;
+    [SerializeField] private IndicatorUI rightIndicator;
+    [SerializeField] private IndicatorUI bottomIndicator;
 
-    [Header("Indicator Colors")]
-    [SerializeField] private Color fillingColor = new Color(1, 1, 1, 0.5f);
-    [SerializeField] private Color sweetSpotColor = Color.green;
-    [SerializeField] private Color missedColor = Color.red;
+    private IndicatorUI currentActiveIndicator;
+    private IndicatorUI lastActiveIndicator; // [FIXED] Ingatan indikator terakhir
 
     protected override void Awake()
     {
@@ -31,6 +28,8 @@ public class UIGameplayController : BaseMenuController
         GameEvents.OnEnemyApproachUpdate += HandleEnemyApproach;
         GameEvents.OnEnemyClear += ResetAllIndicators;
         GameEvents.OnTimerUpdated += UpdateTimerText;
+        GameEvents.OnComboMiss += HandleMissHit;
+        GameEvents.OnComboHit += HandleComboHit;
 
         ResetAllIndicators();
     }
@@ -43,6 +42,8 @@ public class UIGameplayController : BaseMenuController
         GameEvents.OnEnemyApproachUpdate -= HandleEnemyApproach;
         GameEvents.OnEnemyClear -= ResetAllIndicators;
         GameEvents.OnTimerUpdated -= UpdateTimerText;
+        GameEvents.OnComboMiss -= HandleMissHit;
+        GameEvents.OnComboHit -= HandleComboHit;
     }
 
     private void Update()
@@ -59,64 +60,73 @@ public class UIGameplayController : BaseMenuController
     private void UpdateTimerText(float timeRemaining)
     {
         if (!IsActive || timerText == null) return;
-
         timerText.text = Mathf.CeilToInt(timeRemaining).ToString() + "s";
-
-        if (timeRemaining <= 10f)
-            timerText.color = Color.red;
-        else
-            timerText.color = Color.white;
+        timerText.color = timeRemaining <= 10f ? Color.red : Color.white;
     }
 
     private void HandleCheckpointState(bool isAtCheckpoint)
     {
         isTappingPhase = !isAtCheckpoint;
-        if (tapContainer != null)
-        {
-            tapContainer.SetActive(isTappingPhase);
-        }
+        if (tapContainer != null) tapContainer.SetActive(isTappingPhase);
     }
 
     private void HandleEnemyApproach(string direction, float progress, bool isSweetSpot, bool isTooClose)
     {
         if (!IsActive) return;
-
-        // Reset semua dulu agar hanya satu arah yang aktif
-        ResetAllIndicators();
-
-        // Pengecekan safety, kalau sudah miss langsung batalkan proses gambar
         if (isTooClose) return;
 
-        Image activeIndicator = null;
-        if (direction == "Left") activeIndicator = leftIndicator;
-        else if (direction == "Right") activeIndicator = rightIndicator;
-        else if (direction == "Down") activeIndicator = bottomIndicator;
+        IndicatorUI targetIndicator = null;
+        if (direction == "Left") targetIndicator = leftIndicator;
+        else if (direction == "Right") targetIndicator = rightIndicator;
+        else if (direction == "Down") targetIndicator = bottomIndicator;
 
-        if (activeIndicator != null)
+        if (currentActiveIndicator != null && currentActiveIndicator != targetIndicator)
         {
-            activeIndicator.gameObject.SetActive(true);
+            currentActiveIndicator.Hide();
+        }
 
-            // Set value fill image (0 sampai 1)
-            activeIndicator.fillAmount = progress;
-
-            if (isSweetSpot)
+        if (targetIndicator != null)
+        {
+            // [FIXED] Panggil Show() lagi jika arahnya berubah, ATAU jika GameObject mati karena habis animasi MISS
+            if (currentActiveIndicator != targetIndicator || !targetIndicator.gameObject.activeSelf)
             {
-                activeIndicator.color = sweetSpotColor;
-                float pulse = 1f + Mathf.PingPong(Time.time * 15f, 0.2f);
-                activeIndicator.transform.localScale = new Vector3(pulse, pulse, 1f);
+                targetIndicator.Show();
+                currentActiveIndicator = targetIndicator;
+                lastActiveIndicator = targetIndicator;
             }
-            else
-            {
-                activeIndicator.color = fillingColor;
-                activeIndicator.transform.localScale = Vector3.one;
-            }
+            targetIndicator.UpdateProgress(progress, isSweetSpot);
         }
     }
 
-    private void ResetAllIndicators()
+    private void HandleMissHit()
     {
-        if (leftIndicator != null) { leftIndicator.gameObject.SetActive(false); leftIndicator.fillAmount = 0; }
-        if (rightIndicator != null) { rightIndicator.gameObject.SetActive(false); rightIndicator.fillAmount = 0; }
-        if (bottomIndicator != null) { bottomIndicator.gameObject.SetActive(false); bottomIndicator.fillAmount = 0; }
+        Debug.Log("HandleMissHit");
+        // [FIXED] Coba pakai indikator saat ini, kalau null (karena telat mukul), pakai ingatan terakhir
+        IndicatorUI target = currentActiveIndicator != null ? currentActiveIndicator : lastActiveIndicator;
+
+        if (target != null)
+        {
+            target.ShowMiss();
+            // JANGAN DIBUAT NULL di sini agar indikator tidak ke-reset!
+        }
+    }
+
+    private void HandleComboHit()
+    {
+        IndicatorUI target = currentActiveIndicator != null ? currentActiveIndicator : lastActiveIndicator;
+
+        if (target != null)
+        {
+            target.ShowCombo();
+            // JANGAN DIBUAT NULL di sini
+        }
+    }
+
+    public void ResetAllIndicators()
+    {
+        if (leftIndicator != null) leftIndicator.Hide();
+        if (rightIndicator != null) rightIndicator.Hide();
+        if (bottomIndicator != null) bottomIndicator.Hide();
+        currentActiveIndicator = null;
     }
 }

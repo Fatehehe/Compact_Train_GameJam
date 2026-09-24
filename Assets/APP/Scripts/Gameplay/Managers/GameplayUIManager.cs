@@ -58,6 +58,8 @@ public class GameplayUIManager : MonoBehaviour
         uiMainController.SetActive(false);
         uiEndgameController.SetActive(false);
         uiGameplayController.SetActive(true);
+
+        uiGameplayController.ResetAllIndicators();
     }
 
     private void HandleGameEnded(bool isWinning)

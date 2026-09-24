@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelEnvironmentData
   environmentPrefab: {fileID: 6609526375331267087, guid: 860e6ec6f2a754054a3517bcd910b191, type: 3}
   environmentSpawnPosition: {x: 0, y: 1, z: 0}
-  playerStartPosition: {x: 0, y: 1.49, z: -3}
+  playerStartPosition: {x: 0, y: 1.49, z: 100}
   finishPosition: {x: 0, y: 1.49, z: 120.2995}
   pushEnemyPositions:
   - {x: 0, y: 1.49, z: 118.8095}
