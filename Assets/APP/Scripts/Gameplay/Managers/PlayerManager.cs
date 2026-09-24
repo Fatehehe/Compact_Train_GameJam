@@ -10,7 +10,7 @@ public class PlayerManager : IInitializable, IDisposable
     private PlayerAnimationService playerAnimationService;
 
     [Inject]
-    public void Construct(PlayerInteractionService playerInteractionService, PlayerAnimationService playerAnimationService, PlayerControlService playerControlService)
+    public void Construct(PlayerInteractionService playerInteractionService, PlayerAnimationService playerAnimationService)
     {
         this.playerAnimationService = playerAnimationService;
         this.playerInteractionService = playerInteractionService;
@@ -45,5 +45,6 @@ public class PlayerManager : IInitializable, IDisposable
     {
         playerInteractionService.SetPlayerPosition(startPosition);
     }
+
 
 }

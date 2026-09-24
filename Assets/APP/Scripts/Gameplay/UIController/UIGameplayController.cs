@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using DG.Tweening; // Tambahkan ini untuk DOTween
 
 public class UIGameplayController : BaseMenuController
 {
@@ -9,28 +10,34 @@ public class UIGameplayController : BaseMenuController
     [Header("Tap Tap UI")]
     [SerializeField] private GameObject tapContainer;
     [SerializeField] private TextMeshProUGUI tapText;
-    [SerializeField] private float pulseSpeed = 10f;
-    private bool isTappingPhase = false;
+
+    // Variabel diganti agar lebih sesuai dengan DOTween
+    [SerializeField] private float tapPulseScale = 1.2f;
+    [SerializeField] private float tapPulseDuration = 0.2f;
+    private bool isPushingPhase = false;
+    private Tween tapTween; // Menyimpan referensi animasi
 
     [Header("Swipe Indicators (IndicatorUI)")]
     [SerializeField] private IndicatorUI leftIndicator;
     [SerializeField] private IndicatorUI rightIndicator;
     [SerializeField] private IndicatorUI bottomIndicator;
+    [SerializeField] private TextMeshProUGUI levelText;
 
     private IndicatorUI currentActiveIndicator;
-    private IndicatorUI lastActiveIndicator; // [FIXED] Ingatan indikator terakhir
+    private IndicatorUI lastActiveIndicator;
 
     protected override void Awake()
     {
         base.Awake();
 
-        GameEvents.OnCheckpointStateChanged += HandleCheckpointState;
+        GameEvents.OnPushing += HandleOnPushing;
         GameEvents.OnEnemyApproachUpdate += HandleEnemyApproach;
         GameEvents.OnEnemyClear += ResetAllIndicators;
         GameEvents.OnTimerUpdated += UpdateTimerText;
         GameEvents.OnComboMiss += HandleMissHit;
         GameEvents.OnComboHit += HandleComboHit;
 
+        tapContainer.SetActive(false);
         ResetAllIndicators();
     }
 
@@ -38,24 +45,18 @@ public class UIGameplayController : BaseMenuController
     {
         base.OnDestroy();
 
-        GameEvents.OnCheckpointStateChanged -= HandleCheckpointState;
+        GameEvents.OnPushing -= HandleOnPushing;
         GameEvents.OnEnemyApproachUpdate -= HandleEnemyApproach;
         GameEvents.OnEnemyClear -= ResetAllIndicators;
         GameEvents.OnTimerUpdated -= UpdateTimerText;
         GameEvents.OnComboMiss -= HandleMissHit;
         GameEvents.OnComboHit -= HandleComboHit;
+
+        // Hentikan animasi agar tidak error saat objek dihancurkan
+        tapTween?.Kill();
     }
 
-    private void Update()
-    {
-        if (!IsActive) return;
-
-        if (isTappingPhase && tapText != null && tapContainer.activeSelf)
-        {
-            float scale = 1f + Mathf.PingPong(Time.time * pulseSpeed, 0.2f);
-            tapText.transform.localScale = new Vector3(scale, scale, 1f);
-        }
-    }
+    // FUNGSI UPDATE DIHAPUS - DOTween sudah menangani animasinya otomatis
 
     private void UpdateTimerText(float timeRemaining)
     {
@@ -64,10 +65,31 @@ public class UIGameplayController : BaseMenuController
         timerText.color = timeRemaining <= 10f ? Color.red : Color.white;
     }
 
-    private void HandleCheckpointState(bool isAtCheckpoint)
+    private void HandleOnPushing(bool isPushing)
     {
-        isTappingPhase = !isAtCheckpoint;
-        if (tapContainer != null) tapContainer.SetActive(isTappingPhase);
+        isPushingPhase = !isPushing;
+        if (tapContainer != null)
+        {
+            tapContainer.SetActive(isPushing);
+
+            if (isPushing && tapText != null)
+            {
+                // Mulai Animasi DOTween
+                if (tapTween == null || !tapTween.IsActive())
+                {
+                    tapText.transform.localScale = Vector3.one;
+                    tapTween = tapText.transform.DOScale(Vector3.one * tapPulseScale, tapPulseDuration)
+                        .SetLoops(-1, LoopType.Yoyo)
+                        .SetEase(Ease.InOutSine);
+                }
+            }
+            else
+            {
+                // Matikan Animasi dan reset ukuran
+                tapTween?.Kill();
+                if (tapText != null) tapText.transform.localScale = Vector3.one;
+            }
+        }
     }
 
     private void HandleEnemyApproach(string direction, float progress, bool isSweetSpot, bool isTooClose)
@@ -87,7 +109,6 @@ public class UIGameplayController : BaseMenuController
 
         if (targetIndicator != null)
         {
-            // [FIXED] Panggil Show() lagi jika arahnya berubah, ATAU jika GameObject mati karena habis animasi MISS
             if (currentActiveIndicator != targetIndicator || !targetIndicator.gameObject.activeSelf)
             {
                 targetIndicator.Show();
@@ -100,14 +121,11 @@ public class UIGameplayController : BaseMenuController
 
     private void HandleMissHit()
     {
-        Debug.Log("HandleMissHit");
-        // [FIXED] Coba pakai indikator saat ini, kalau null (karena telat mukul), pakai ingatan terakhir
         IndicatorUI target = currentActiveIndicator != null ? currentActiveIndicator : lastActiveIndicator;
 
         if (target != null)
         {
             target.ShowMiss();
-            // JANGAN DIBUAT NULL di sini agar indikator tidak ke-reset!
         }
     }
 
@@ -118,7 +136,6 @@ public class UIGameplayController : BaseMenuController
         if (target != null)
         {
             target.ShowCombo();
-            // JANGAN DIBUAT NULL di sini
         }
     }
 
@@ -128,5 +145,11 @@ public class UIGameplayController : BaseMenuController
         if (rightIndicator != null) rightIndicator.Hide();
         if (bottomIndicator != null) bottomIndicator.Hide();
         currentActiveIndicator = null;
+        lastActiveIndicator = null;
+    }
+
+    public void SetLevelText(string level)
+    {
+        levelText.SetText("Day " + level);
     }
 }

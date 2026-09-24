@@ -9,6 +9,8 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private PlayerManager playerManager;
     private PlayerDetector playerDetector;
     private LevelDatabase levelDatabase;
+    private InputSystemService inputSystemService;
+
 
     private int currentLevelIndex = 0;
     private GameObject currentLevelInstance;
@@ -21,26 +23,27 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     public event Action OnGameStarted;
 
     [Inject]
-    public void Construct(PlayerManager playerManager, EnemyManager enemyManager, PlayerDetector playerDetector, LevelDatabase levelDatabase)
+    public void Construct(PlayerManager playerManager, EnemyManager enemyManager, PlayerDetector playerDetector, LevelDatabase levelDatabase, InputSystemService inputSystemService)
     {
         this.playerManager = playerManager;
         this.enemyManager = enemyManager;
         this.playerDetector = playerDetector;
         this.levelDatabase = levelDatabase;
+        this.inputSystemService = inputSystemService;
     }
 
     public void Initialize()
     {
+        inputSystemService?.ChangeInputState(InputStateType.UI);
+
         playerDetector.OnFinishReached += HandleFinishReached;
         GameEvents.OnMissHit += HandleMissHit;
-        GameEvents.OnPlay += Play;
     }
 
     public void Dispose()
     {
         playerDetector.OnFinishReached -= HandleFinishReached;
         GameEvents.OnMissHit -= HandleMissHit;
-        GameEvents.OnPlay -= Play;
     }
 
     private void HandleMissHit(float penaltyTime)
@@ -49,8 +52,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
         timer -= penaltyTime;
         GameEvents.OnTimerUpdated?.Invoke(timer);
-
-        Debug.Log($"MISS! Waktu dikurangi {penaltyTime} detik. Sisa waktu: {timer}");
 
         if (timer <= 0)
         {
@@ -61,11 +62,13 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
     private void StartLevel(int index)
     {
+        inputSystemService?.ChangeInputState(InputStateType.Player);
+
+        isGameRunning = true;
         LevelData levelData = levelDatabase.GetLevel(index);
 
         if (levelData == null)
         {
-            Debug.Log("Semua Level Selesai! Game Tamat.");
             return;
         }
 
@@ -88,8 +91,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
         timer = levelData.levelTimer;
         GameEvents.OnTimerUpdated?.Invoke(timer);
-
-        Debug.Log($"Level {index + 1} Dimulai! Waktu: {timer} detik");
         OnGameStarted.Invoke();
     }
 
@@ -109,6 +110,9 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
     private void HandleGameOver()
     {
+        if (!isGameRunning) return;
+
+        inputSystemService?.ChangeInputState(InputStateType.UI);
         isGameRunning = false;
         OnGameEnded.Invoke(false);
         playerManager.StopCharacter(false);
@@ -119,6 +123,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     {
         if (!isGameRunning) return;
 
+        inputSystemService?.ChangeInputState(InputStateType.UI);
         isGameRunning = false;
         OnGameEnded.Invoke(true);
         playerManager.StopCharacter(true);
@@ -142,8 +147,8 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
         StartLevel(currentLevelIndex);
     }
 
-    public void Play()
+    public string GetLevelIndex()
     {
-        isGameRunning = true;
+        return (currentLevelIndex + 1).ToString();
     }
 }

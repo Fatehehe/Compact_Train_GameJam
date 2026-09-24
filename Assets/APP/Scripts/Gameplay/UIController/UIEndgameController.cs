@@ -8,11 +8,12 @@ public class UIEndgameController : BaseMenuController
 {
     [SerializeField] private Button buttonRestart;
     [SerializeField] private Button buttonNext;
-    [SerializeField] private Button buttonHome;
-    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private GameObject winInfo;
+    [SerializeField] private GameObject loseInfo;
+    [SerializeField] private TextMeshProUGUI levelText;
+
     public event Action OnRestartButtonPressed;
     public event Action OnNextButtonPressed;
-    public event Action OnHomeButtonPressed;
 
     protected override void Awake()
     {
@@ -24,10 +25,6 @@ public class UIEndgameController : BaseMenuController
         if (buttonNext != null)
         {
             buttonNext.onClick.AddListener(NextButtonPressed);
-        }
-        if (buttonHome != null)
-        {
-            buttonHome.onClick.AddListener(HomeButtonPressed);
         }
     }
 
@@ -41,14 +38,19 @@ public class UIEndgameController : BaseMenuController
         OnRestartButtonPressed.Invoke();
     }
 
-    private void HomeButtonPressed()
+    public void SetResultText(bool isWinning, string level)
     {
-        OnHomeButtonPressed.Invoke();
-    }
+        if (isWinning)
+        {
+            winInfo.SetActive(true);
+            loseInfo.SetActive(false);
+        }
+        else
+        {
+            winInfo.SetActive(false);
+            loseInfo.SetActive(true);
+        }
 
-    public void SetResultText(bool isWinning)
-    {
-        string result = isWinning ? "Win" : "Lose";
-        resultText.SetText(result);
+        levelText.SetText("Day " + level);
     }
 }

@@ -30,7 +30,6 @@ public class CharacterInteractionService : IInitializable, IDisposable
 
     public void Initialize()
     {
-        inputSystemService?.ChangeInputState(InputStateType.Player);
         inputSystemService.OnPressStarted += HandlePressStarted;
         inputSystemService.OnPressCanceled += HandlePressEnded;
         inputSystemService.OnPressPosPerformed += HandlePosChanged;

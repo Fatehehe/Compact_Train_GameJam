@@ -17,7 +17,7 @@ public class CharacterIdleState : CharacterBaseState, ITap, IPlayer
 
     public void OnTap()
     {
-        GameEvents.OnPlay.Invoke();
+        // GameEvents.OnPlay.Invoke();
         stateMachine.SwitchState(new CharacterMovingState(stateMachine));
     }
 

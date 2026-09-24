@@ -10,8 +10,12 @@ public class CharacterPushingState : CharacterBaseState, ITap, ISwipe, IPlayer, 
     public override void Enter()
     {
         stateMachine.Animator.CrossFadeInFixedTime(PushHash, stateMachine.Config.crossFadeDuration);
+        GameEvents.OnPushing.Invoke(true);
     }
-    public override void Exit() { }
+    public override void Exit()
+    {
+        GameEvents.OnPushing.Invoke(false);
+    }
     public override void Tick(float deltaTime) { }
 
     public void OnTap()

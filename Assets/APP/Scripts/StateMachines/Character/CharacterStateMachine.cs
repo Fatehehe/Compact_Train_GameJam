@@ -23,21 +23,6 @@ public class CharacterStateMachine : StateMachine, ITap, ISwipe, IAnimation, IPl
         SwitchState(new CharacterIdleState(this));
     }
 
-    // void OnEnable()
-    // {
-    //     EnemyDetector.OnAttacked += HandleAttacked;
-    // }
-
-    // void OnDisable()
-    // {
-    //     EnemyDetector.OnAttacked -= HandleAttacked;
-    // }
-
-    // private void HandleAttacked()
-    // {
-    //     SwitchState(new CharacterFallState(this));
-    // }
-
     public void OnSwipeUp() => (currentState as ISwipe)?.OnSwipeUp();
     public void OnSwipeRight() => (currentState as ISwipe)?.OnSwipeRight();
     public void OnSwipeLeft() => (currentState as ISwipe)?.OnSwipeLeft();

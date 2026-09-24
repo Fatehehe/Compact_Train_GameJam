@@ -88,9 +88,9 @@ public class EnemyManager : IInitializable, IDisposable, ITickable
             }
         }
 
+        if (!canSpawn) return;
         if (isMiss)
         {
-            Debug.Log("duh miss lagi");
             GameEvents.OnComboMiss?.Invoke();
         }
         else

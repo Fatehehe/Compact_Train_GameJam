@@ -24,7 +24,6 @@ public class GameplayUIManager : MonoBehaviour
     {
         uiMainController.OnGameStart += HandleGameStart;
 
-        uiEndgameController.OnHomeButtonPressed += HandleHomeButtonPressed;
         uiEndgameController.OnNextButtonPressed += HandleNextButtonPressed;
         uiEndgameController.OnRestartButtonPressed += HandleRestartButtonPressed;
 
@@ -39,7 +38,6 @@ public class GameplayUIManager : MonoBehaviour
     void OnDestroy()
     {
         uiMainController.OnGameStart -= HandleGameStart;
-        uiEndgameController.OnHomeButtonPressed -= HandleHomeButtonPressed;
         uiEndgameController.OnNextButtonPressed -= HandleNextButtonPressed;
         uiEndgameController.OnRestartButtonPressed -= HandleRestartButtonPressed;
 
@@ -51,6 +49,8 @@ public class GameplayUIManager : MonoBehaviour
     {
         if (gameplayManager.IsGameRunning) return;
         gameplayManager.StartGame();
+        uiGameplayController.SetLevelText(gameplayManager.GetLevelIndex());
+        uiGameplayController.ResetAllIndicators();
     }
 
     private void HandleGameRunning()
@@ -58,7 +58,6 @@ public class GameplayUIManager : MonoBehaviour
         uiMainController.SetActive(false);
         uiEndgameController.SetActive(false);
         uiGameplayController.SetActive(true);
-
         uiGameplayController.ResetAllIndicators();
     }
 
@@ -66,22 +65,19 @@ public class GameplayUIManager : MonoBehaviour
     {
         uiGameplayController.SetActive(false);
         uiEndgameController.SetActive(true);
-        uiEndgameController.SetResultText(isWinning);
-    }
-
-    private void HandleHomeButtonPressed()
-    {
-        uiEndgameController.SetActive(false);
-        uiMainController.SetActive(true);
+        uiGameplayController.ResetAllIndicators();
+        uiEndgameController.SetResultText(isWinning, gameplayManager.GetLevelIndex());
     }
 
     private void HandleNextButtonPressed()
     {
+        uiGameplayController.ResetAllIndicators();
         gameplayManager.NextLevel();
     }
 
     private void HandleRestartButtonPressed()
     {
+        uiGameplayController.ResetAllIndicators();
         gameplayManager.RestartGame();
     }
 }

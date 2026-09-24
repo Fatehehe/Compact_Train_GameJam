@@ -4,7 +4,6 @@ public static class GameEvents
 {
     public static Action<string> OnPlayerSwipe;
     public static Action<float> OnMissHit;
-    public static Action OnPlay;
 
     public static Action<bool> OnCheckpointStateChanged; // Untuk nyalakan/matikan "Tap Tap!"
 
@@ -16,4 +15,6 @@ public static class GameEvents
     public static Action<float> OnTimerUpdated;
     public static Action OnComboHit;
     public static Action OnComboMiss;
+
+    public static Action<bool> OnPushing;
 }
