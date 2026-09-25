@@ -12,8 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df62c4ae64654acfaf05abca805ec06, type: 3}
   m_Name: LevelEnvironment3
   m_EditorClassIdentifier: Assembly-CSharp::LevelEnvironmentData
-  environmentPrefab: {fileID: 0}
-  environmentSpawnPosition: {x: 0, y: 0, z: 0}
-  playerStartPosition: {x: 0, y: 0, z: 0}
-  finishPosition: {x: 0, y: 0, z: 0}
-  pushEnemyPositions: []
+  environmentPrefab: {fileID: 6609526375331267087, guid: 1c8a27a9ca56c4827a6757db49b2a329, type: 3}
+  environmentSpawnPosition: {x: 0, y: 1, z: 0}
+  playerStartPosition: {x: 0, y: 1.49, z: -3}
+  finishPosition: {x: 0, y: 1.49, z: 450}
+  pushEnemyPositions:
+  - {x: 0, y: 1.49, z: 448}
+  - {x: 0.2, y: 1.49, z: 447}
+  - {x: -0.2, y: 1.49, z: 446}
+  - {x: 0.1, y: 1.49, z: 445}
+  - {x: -0.1, y: 1.49, z: 444}
+  - {x: -0.2, y: 1.49, z: 443}
+  - {x: 0.1, y: 1.49, z: 442}
+  - {x: 0.2, y: 1.49, z: 441}
+  - {x: 0, y: 1.49, z: 440}
+  spawnEnemyPositions:
+  - {x: 0, y: 1.49, z: 436}
+  - {x: 3.2, y: 1.49, z: 444}
+  - {x: -3.2, y: 1.49, z: 444}
+  spawnEnemyPrefab: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}

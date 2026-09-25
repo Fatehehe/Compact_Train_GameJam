@@ -55,6 +55,7 @@ public class GameplayUIManager : MonoBehaviour
 
     private void HandleGameRunning()
     {
+        uiGameplayController.SetLevelText(gameplayManager.GetLevelIndex());
         uiMainController.SetActive(false);
         uiEndgameController.SetActive(false);
         uiGameplayController.SetActive(true);

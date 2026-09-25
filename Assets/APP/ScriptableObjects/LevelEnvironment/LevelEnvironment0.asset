@@ -17,7 +17,9 @@ MonoBehaviour:
   playerStartPosition: {x: 0, y: 1.49, z: -3}
   finishPosition: {x: 0, y: 1.49, z: 141.39}
   pushEnemyPositions:
-  - {x: -0.096, y: 1.49, z: 139.206}
+  - {x: 0, y: 1.49, z: 139.206}
+  - {x: 0.1, y: 1.49, z: 138}
+  - {x: -0.1, y: 1.49, z: 137}
   spawnEnemyPositions:
   - {x: 0, y: 1.49, z: 134.97}
   - {x: -4, y: 1.49, z: 138.11}

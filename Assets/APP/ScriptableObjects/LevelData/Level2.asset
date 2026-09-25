@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1916c84b1f254c9f8f74fd2d55374a6, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  levelPrefab: {fileID: 0}
-  playerStartPosition: {x: 0, y: 0, z: 0}
-  levelTimer: 60
-  pushEnemyPrefab: {fileID: 0}
-  pushEnemyPositions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  checkpointEnemyCount: 3
+  levelEnvironment: {fileID: 11400000, guid: e9ff0803c72ba44fbb033e43a798f80a, type: 2}
+  levelTimer: 40
+  randomMinTimeSpawn: 0
+  randomMaxTimeSpawn: 1
+  pushEnemyPrefab: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
+  minHitDistance: 0.8
+  maxHitDistance: 2.3
+  timePenalty: 3
