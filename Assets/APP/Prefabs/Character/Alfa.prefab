@@ -394,6 +394,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7904776447971348964}
   - component: {fileID: 7061469245416824060}
+  - component: {fileID: 899416433710363560}
   m_Layer: 0
   m_Name: Alfa
   m_TagString: Untagged
@@ -438,6 +439,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.8796878, z: 1}
   m_Center: {x: 0, y: 0.9404794, z: 0}
+--- !u!114 &899416433710363560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4531082180150161751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe0e0a41847645f9995012ef2b463fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Obstacle
 --- !u!1 &4549605870730277892
 GameObject:
   m_ObjectHideFlags: 0
