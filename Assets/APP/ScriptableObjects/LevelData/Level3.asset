@@ -19,4 +19,4 @@ MonoBehaviour:
   pushEnemyPrefab: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
   minHitDistance: 0.8
   maxHitDistance: 2.3
-  timePenalty: 2
+  timePenalty: 4
