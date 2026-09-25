@@ -11,7 +11,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private LevelDatabase levelDatabase;
     private InputSystemService inputSystemService;
 
-
     private int currentLevelIndex = 0;
     public int CurrentLevelIndex => currentLevelIndex;
     private GameObject currentLevelInstance;
@@ -22,6 +21,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
     public event Action<bool> OnGameEnded;
     public event Action OnGameStarted;
+    public event Action OnAllLevelsFinished;
 
     [Inject]
     public void Construct(PlayerManager playerManager, EnemyManager enemyManager, PlayerDetector playerDetector, LevelDatabase levelDatabase, InputSystemService inputSystemService)
@@ -36,7 +36,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     public void Initialize()
     {
         inputSystemService?.ChangeInputState(InputStateType.UI);
-
         playerDetector.OnFinishReached += HandleFinishReached;
         GameEvents.OnMissHit += HandleMissHit;
     }
@@ -63,16 +62,31 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
     private void StartLevel(int index)
     {
-        inputSystemService?.ChangeInputState(InputStateType.Player);
-
-        isGameRunning = true;
         LevelData levelData = levelDatabase.GetLevel(index);
 
         if (levelData == null)
         {
+            isGameRunning = false;
+
+            if (currentLevelInstance != null)
+            {
+                UnityEngine.Object.Destroy(currentLevelInstance);
+            }
+
+            inputSystemService?.ChangeInputState(InputStateType.UI);
+
+            // [TAMBAHKAN INI] Kembalikan player ke posisi awal/Home dan reset animasinya ke Idle
+            playerManager.SetPlayerPosition(new Vector3(0f, 1.49f, -3.5f));
+            playerManager.ResetPlayer();
+
+            OnAllLevelsFinished?.Invoke();
+
+            currentLevelIndex = 0;
             return;
         }
 
+        inputSystemService?.ChangeInputState(InputStateType.Player);
+        isGameRunning = true;
         LevelEnvironmentData envData = levelData.levelEnvironment;
 
         if (currentLevelInstance != null)
@@ -99,7 +113,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     {
         if (!isGameRunning) return;
         timer -= Time.deltaTime;
-
         GameEvents.OnTimerUpdated?.Invoke(timer);
 
         if (timer <= 0)
@@ -112,7 +125,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private void HandleGameOver()
     {
         if (!isGameRunning) return;
-
         inputSystemService?.ChangeInputState(InputStateType.UI);
         isGameRunning = false;
         OnGameEnded.Invoke(false);
@@ -123,7 +135,6 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
     private void HandleFinishReached()
     {
         if (!isGameRunning) return;
-
         inputSystemService?.ChangeInputState(InputStateType.UI);
         isGameRunning = false;
         OnGameEnded.Invoke(true);

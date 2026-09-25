@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using VContainer;
 
 public class UIEndgameController : BaseMenuController
 {
@@ -30,12 +29,12 @@ public class UIEndgameController : BaseMenuController
 
     private void NextButtonPressed()
     {
-        OnNextButtonPressed.Invoke();
+        OnNextButtonPressed?.Invoke();
     }
 
     private void RestartButtonPressed()
     {
-        OnRestartButtonPressed.Invoke();
+        OnRestartButtonPressed?.Invoke();
     }
 
     public void SetResultText(bool isWinning, string level)
@@ -44,12 +43,21 @@ public class UIEndgameController : BaseMenuController
         {
             winInfo.SetActive(true);
             loseInfo.SetActive(false);
+
+            // Jika menang, munculkan tombol Next
+            if (buttonNext != null) buttonNext.gameObject.SetActive(true);
         }
         else
         {
             winInfo.SetActive(false);
             loseInfo.SetActive(true);
+
+            // Jika kalah, sembunyikan tombol Next
+            if (buttonNext != null) buttonNext.gameObject.SetActive(false);
         }
+
+        // Pastikan tombol Restart selalu muncul (baik saat menang maupun kalah)
+        if (buttonRestart != null) buttonRestart.gameObject.SetActive(true);
 
         levelText.SetText("Day " + level);
     }
