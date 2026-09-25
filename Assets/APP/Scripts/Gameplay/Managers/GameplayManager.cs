@@ -13,6 +13,7 @@ public class GameplayManager : IInitializable, IDisposable, ITickable
 
 
     private int currentLevelIndex = 0;
+    public int CurrentLevelIndex => currentLevelIndex;
     private GameObject currentLevelInstance;
     private float timer;
 

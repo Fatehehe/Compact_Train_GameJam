@@ -7,6 +7,7 @@ public class GameplayUIManager : MonoBehaviour
     [SerializeField] private UIMainController uiMainController;
     [SerializeField] private UIGameplayController uiGameplayController;
     [SerializeField] private UIEndgameController uiEndgameController;
+    [SerializeField] private UITutorialController uiTutorialController; // [TAMBAHKAN INI]
 
     private GameplayManager gameplayManager;
 
@@ -18,6 +19,7 @@ public class GameplayUIManager : MonoBehaviour
         container.Inject(uiMainController);
         container.Inject(uiGameplayController);
         container.Inject(uiEndgameController);
+        container.Inject(uiTutorialController); // [TAMBAHKAN INI]
     }
 
     private void Awake()
@@ -27,12 +29,15 @@ public class GameplayUIManager : MonoBehaviour
         uiEndgameController.OnNextButtonPressed += HandleNextButtonPressed;
         uiEndgameController.OnRestartButtonPressed += HandleRestartButtonPressed;
 
+        uiTutorialController.OnTutorialFinished += HandleTutorialFinished; // [TAMBAHKAN INI]
+
         gameplayManager.OnGameEnded += HandleGameEnded;
         gameplayManager.OnGameStarted += HandleGameRunning;
 
         uiMainController.SetActive(true);
         uiGameplayController.SetActive(false);
         uiEndgameController.SetActive(false);
+        uiTutorialController.SetActive(false); // Pastikan tutorial disembunyikan di awal
     }
 
     void OnDestroy()
@@ -41,6 +46,8 @@ public class GameplayUIManager : MonoBehaviour
         uiEndgameController.OnNextButtonPressed -= HandleNextButtonPressed;
         uiEndgameController.OnRestartButtonPressed -= HandleRestartButtonPressed;
 
+        uiTutorialController.OnTutorialFinished -= HandleTutorialFinished; // [TAMBAHKAN INI]
+
         gameplayManager.OnGameEnded -= HandleGameEnded;
         gameplayManager.OnGameStarted -= HandleGameRunning;
     }
@@ -48,6 +55,27 @@ public class GameplayUIManager : MonoBehaviour
     private void HandleGameStart()
     {
         if (gameplayManager.IsGameRunning) return;
+
+        // Cek jika ini adalah Level Pertama (Index 0)
+        if (gameplayManager.CurrentLevelIndex == 0)
+        {
+            uiMainController.SetActive(false);
+            uiTutorialController.ShowTutorial(); // Tampilkan Tutorial
+        }
+        else
+        {
+            StartGameplayProcess(); // Langsung main
+        }
+    }
+
+    private void HandleTutorialFinished()
+    {
+        StartGameplayProcess();
+    }
+
+    // Fungsi helper agar tidak mengulang penulisan kode
+    private void StartGameplayProcess()
+    {
         gameplayManager.StartGame();
         uiGameplayController.SetLevelText(gameplayManager.GetLevelIndex());
         uiGameplayController.ResetAllIndicators();
@@ -58,6 +86,7 @@ public class GameplayUIManager : MonoBehaviour
         uiGameplayController.SetLevelText(gameplayManager.GetLevelIndex());
         uiMainController.SetActive(false);
         uiEndgameController.SetActive(false);
+        uiTutorialController.SetActive(false);
         uiGameplayController.SetActive(true);
         uiGameplayController.ResetAllIndicators();
     }
