@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Project Path="MoreMountains.Tools.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="MoreMountains.Tools.Editor.csproj" />
   <Project Path="AppModuleCommon.Editor.csproj" />
   <Project Path="MoreMountains.InventoryEngine.csproj" />
@@ -7,7 +8,6 @@
   <Project Path="AppModuleCommon.csproj" />
   <Project Path="MoreMountains.Interface.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="MoreMountains.InventoryEngine.Editor.csproj" />
   <Project Path="AppModuleSoundSystem.Editor.csproj" />
   <Project Path="AppModuleSoundSystem.csproj" />

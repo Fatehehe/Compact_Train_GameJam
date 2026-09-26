@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1916c84b1f254c9f8f74fd2d55374a6, type: 3}
+  m_Name: Level0
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  levelEnvironment: {fileID: 11400000, guid: 194238e90613e487cbd42e8d19b80e75, type: 2}
+  levelTimer: 30
+  randomMinTimeSpawn: 0
+  randomMaxTimeSpawn: 2
+  pushEnemyPrefab: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
+  minHitDistance: 0.5
+  maxHitDistance: 2
+  timePenalty: 1

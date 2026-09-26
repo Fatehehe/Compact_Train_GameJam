@@ -16,19 +16,7 @@ MonoBehaviour:
   - id: bgm
     items:
     - key: BGM_Home
-      value: {fileID: 8300000, guid: 617a77cadff171741b74463cd87d9386, type: 3}
-      type: 0
-    - key: BGM_Game
-      value: {fileID: 8300000, guid: 0446a975454d54fd1ae754cc3670c912, type: 3}
-      type: 0
-    - key: BGM_Game_China
-      value: {fileID: 8300000, guid: 4ae516bc17e6fb848aba05cb6cbc26d8, type: 3}
-      type: 0
-    - key: BGM_Game_Indonesia
-      value: {fileID: 8300000, guid: a58902027e0292448b4e4ac2f9526dca, type: 3}
-      type: 0
-    - key: BGM_Game_Egypt
-      value: {fileID: 8300000, guid: e2756cf8e828a6d4487f8311f6b65534, type: 3}
+      value: {fileID: 8300000, guid: 9eb5674d7d7a543298f240c3e723c64b, type: 3}
       type: 0
   - id: sfx
     items:

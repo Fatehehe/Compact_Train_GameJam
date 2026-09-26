@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df62c4ae64654acfaf05abca805ec06, type: 3}
+  m_Name: LevelEnvironment4
+  m_EditorClassIdentifier: Assembly-CSharp::LevelEnvironmentData
+  environmentPrefab: {fileID: 6609526375331267087, guid: 2013aaf2f3b574ed4b2db87269dc6243, type: 3}
+  environmentSpawnPosition: {x: 0, y: 1, z: 0}
+  playerStartPosition: {x: 0, y: 1.49, z: -3}
+  finishPosition: {x: 0, y: 1.49, z: 527.93}
+  pushEnemyPositions:
+  - {x: 0, y: 1.49, z: 527}
+  - {x: 0.2, y: 1.49, z: 526}
+  - {x: -0.2, y: 1.49, z: 525}
+  - {x: 0.1, y: 1.49, z: 524}
+  - {x: -0.1, y: 1.49, z: 523}
+  - {x: 0.1, y: 1.49, z: 522}
+  - {x: 0.2, y: 1.49, z: 521}
+  - {x: -0.2, y: 1.49, z: 520}
+  - {x: -0.1, y: 1.49, z: 519}
+  - {x: 0.1, y: 1.49, z: 518}
+  - {x: 0, y: 1.49, z: 517}
+  spawnEnemyPositions:
+  - {x: 3.2, y: 1.49, z: 514}
+  - {x: 3.2, y: 1.49, z: 522}
+  - {x: -3.2, y: 1.49, z: 522}
+  spawnEnemyPrefab: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
