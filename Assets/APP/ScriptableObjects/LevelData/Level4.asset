@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level4
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelEnvironment: {fileID: 11400000, guid: b0daacf3798954f0683c55acbf9ce4db, type: 2}
-  levelTimer: 70
+  levelTimer: 90
   randomMinTimeSpawn: 0
   randomMaxTimeSpawn: 1.5
   pushEnemyPrefab: {fileID: 1650989105532154813, guid: 114961aa92c3142e98e9e393d6c3b6e9, type: 3}
